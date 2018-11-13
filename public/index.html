@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+    <form id="createUserForm">
+        <label for="userName">User name:</label>
+        <input type="text" id="userName" required>
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" required>
+
+        <button>Create</button>
+    </form>
+    <br>
+    <br>
+
+    
+    
+
+</body>
+<script>
+    
+
+
+
+    
+
+        let form = document.getElementById("createUserForm");
+        form.onsubmit = function (evt) {
+            // Stops the form from submitting
+            evt.preventDefault();
+            
+            let userName = document.getElementById("userName").value;
+            let password = document.getElementById("password").value;
+            let email = document.getElementById("email").value;
+           
+            
+            fetch('/app/user',{
+                method:"POST",
+                body:JSON.stringify({
+                    name:userName,
+                    pswHash:password,
+                    email:email
+
+                   
+                }),
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+
+            }).then(function(data){
+                if(data.status < 400){
+
+                    console.log(data);
+                    return data.json();
+                }
+           
+            }).catch(err =>{
+                console.error(err);
+            });
+
+        }
+
+
+
+
+
+    
+
+
+</script>
+</html>

@@ -1,0 +1,6 @@
+function HASH(salt, input){
+    return ...
+}
+
+let hash = HASH("Kittens", "Liban");
+console.log(hash) // 
