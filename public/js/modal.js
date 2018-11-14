@@ -109,7 +109,38 @@ editSpan.onclick = function() {
 
 
 }
+let form = document.getElementById("Array");
+form.onsubmit = function (evt) {
+// Stops the form from submitting
+evt.preventDefault();
 
+
+let inputText = document.getElementById("task").value;
+
+
+fetch('/app/lists',{
+   method:"POST",
+   body:JSON.stringify({
+       inputText
+
+      
+   }),
+   headers: {
+       "Content-Type": "application/json; charset=utf-8"
+   },
+
+}).then(function(data){
+   if(data.status < 400){
+
+       console.log(data);
+       return data.json();
+   }
+
+}).catch(err =>{
+   console.error(err);
+});
+
+}
 function show() {
   
     let todos = get_todos();
