@@ -46,27 +46,6 @@
         </div>
     </template>
 
-    <template id="welcomeView">
-        <div class="card">
-            <div class="section">
-                <h1>Welcome</h1>
-            </div>
-            <div class="section">
-                <button id="quotebt">Get Quote</button>
-            </div>
-            <div class="section">
-                <q id="quote"></q>
-            </div>
-        </div>
-        <div id="errorView" class="card error" hidden>
-            <div class="section">
-                <h1>Error</h1>
-            </div>
-            <div class="section">
-                <p id="msg"></p>
-            </div>
-        </div>
-    </template>
 
 
 
@@ -112,9 +91,12 @@
                     return Promise.reject(new Error("Could not log you in at this time, try again later"));
                 }
             }).then(function (responsJSON) {
+              
                 authenticationToken = responsJSON.auth; // Because this is where the server puts the token.
                 authenticatedUser = responsJSON.user; // Information about the user. 
+                console.log("yeah");
                 displayWelcome();
+                
             }).catch(function (err) {
                 // fetch could not complete the request.
                 displayError(err.message);
@@ -166,15 +148,10 @@
 
         function displayWelcome() {
 
-            clearContainer();
+       
+            window.location = 'modal-index.html';
 
-            let welcome = getTemplate("welcomeView");
-            let bt = welcome.querySelector("#quotebt");
-            bt.onclick = function (evt) {
-                fetchQuote();
-            }
-
-            document.body.appendChild(welcome);
+           
         }
 
         function displayError(msg) {
