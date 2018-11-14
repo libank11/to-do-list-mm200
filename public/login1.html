@@ -104,30 +104,8 @@
 
         }
 
-        // Run a request that requiers an auth token.
-        function fetchQuote() {
-
-            let request = {
-                method: "GET",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'x-access-auth': authenticationToken
-                }
-            }
-
-            fetch("/app/quote", request).then(function (res) {
-                if (res.status < 400) {
-                    return res.json();
-                } else {
-                    return Promise.reject(new Error("Session not valid. log inn again"));
-                }
-            }).then(function (json) {
-                document.getElementById("quote").textContent = json.quote;
-            }).catch(function (err) {
-                displayError(err.message);
-            });
-        }
+   
+        
 
         // View code ----------------------------------------------------------------------------------
         // Moste things after this point is just UI code and not important for the discussion.

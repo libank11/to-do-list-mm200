@@ -2,9 +2,9 @@ const {
     Pool,
     Client
 } = require('pg');
-//const connectionString = process.env.DATABASE_URL;
-const connectionString = `postgres://vhxrngiprgfopd:0fc06953d767820de7bcdeaa60514b4c86c6153eec2ddbe04699c53b9745c008@ec2-54-217-235-159.eu-west-1.compute.amazonaws.com:5432/d1ra3rjtifnror
-`;
+const connectionString = process.env.DATABASE_URL;
+/*const connectionString = `postgres://vhxrngiprgfopd:0fc06953d767820de7bcdeaa60514b4c86c6153eec2ddbe04699c53b9745c008@ec2-54-217-235-159.eu-west-1.compute.amazonaws.com:5432/d1ra3rjtifnror
+`;*/
 
 const db = {}
 
