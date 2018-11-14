@@ -6,6 +6,7 @@ const app = express();
 
 const user = require("./js/user.js");
 const list = require("./js/list.js");
+const auth = require("./js/auth.js");
 
 
 
@@ -14,7 +15,7 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(user);
 app.use(list);
-
+app.use(auth);
 
 app.listen(app.get('port'), function () {
      console.log('server running', app.get('port'));
