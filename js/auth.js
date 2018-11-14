@@ -64,9 +64,9 @@ async function databaseQuery(username,password) {
         var query = `Select * from "public"."user" where username=${username} AND hash =${password} `;
        
     });*/
-   console.log("her")
+ 
 
-    const query = `Select * from "public"."user" where username='${username}' `;
+    const query = `Select * from "public"."user" where username = '${username}' `;
     let foundUser = await db.select(query);
 
 
@@ -74,9 +74,14 @@ async function databaseQuery(username,password) {
     if (foundUser && foundUser.length === 1) {
         const isCorrect = await bcrypt.compare(password, foundUser[0].hash); // We use bcrypt to compare the hash in the db with the password we recived. 
         // 3. if the password is correct the userobject is parsed on
+        console.log("sjekker")
         if (!isCorrect) {
             foundUser = null;
         }
+    }
+    else{
+        
+        return
     }
 
     return Promise.resolve(foundUser);

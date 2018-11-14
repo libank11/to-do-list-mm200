@@ -100,8 +100,10 @@
 
             fetch("/app/authenticate", request).then(function (respons) {
                 if (respons.status < 400) {
+                    console.log("bruker er logget inn"); 
                     // OK we are authenticated.
                     return respons.json(); // Grab the JSON payload. 
+                   
                 } else if (respons.status === 401) {
                     // Username or password was wrong, informe the user.
                     return Promise.reject(new Error("Wrong username or password"));
