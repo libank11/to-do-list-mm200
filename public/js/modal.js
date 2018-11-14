@@ -109,18 +109,18 @@ editSpan.onclick = function() {
 
 
 }
-let form = document.getElementById("Array");
-form.onsubmit = function (evt) {
+let form = document.getElementById("modalBtn");
+form.onclick = function (evt) {
 // Stops the form from submitting
 evt.preventDefault();
-
+modal.style.display = "none";
 
 let inputText = document.getElementById("task").value;
 
 
 fetch('/app/lists',{
    method:"POST",
-   body:JSON.stringify({
+   body:JSON.stringify({    
        inputText
 
       
