@@ -8,9 +8,9 @@ function clearInput(){
         
         
         //delay of clear inputvalue function
-        setTimeout(function() {
+        /*setTimeout(function() {
             document.getElementById("task").value="";
-        },1);
+        },1000);*/
     }
 var modal = document.getElementById('myModal');
 
@@ -64,12 +64,13 @@ console.log("tomt");
   }
   else {
     todos.push(inputTxt);
-  
+   
   
   //localStorage.setItem('todo', JSON.stringify(todos));
   console.log(todos);
   show();
-  return false;
+ 
+ // return false;
   }
 }
 
@@ -109,7 +110,7 @@ editSpan.onclick = function() {
 
 
 }
-let form = document.getElementById("modalBtn");
+/*let form = document.getElementById("modalBtn");
 form.onclick = function (evt) {
 // Stops the form from submitting
 evt.preventDefault();
@@ -131,30 +132,33 @@ fetch('/app/lists',{
 
 }).then(function(data){
    if(data.status < 400){
-
+    document.getElementById("task").value="";
        console.log(data);
        return data.json();
+       
    }
 
 }).catch(err =>{
    console.error(err);
 });
 
-}
+}*/
 function show() {
-  
+    console.log("hey");
     let todos = get_todos();
     let html = '<ul class="list">';
     let button = '<button class="editBttn"><i class="fa fa-bars"></i></button>';
   
-  for (var i = 0; i < todos.length; i++) {
+    for (var i = 0; i < todos.length; i++) {
          html +=  '<li  id="'+ i+ '">' + todos[i] + button;
+         console.log("kjører")
+         
             
   };
           
           html += '</ul>';
           document.getElementById('todos').innerHTML = html;
-
+console.log(i)
 
   
   var button_delete = document.getElementsByClassName('remove');
