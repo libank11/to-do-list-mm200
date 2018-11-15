@@ -44,7 +44,7 @@ var todos = [];
 
 function get_todos() {
          
-         var todos_str = localStorage.getItem('todo');
+         var todos_str = localStorage.getItem('todo1');
          
          if (todos_str !== null) {
            todos = JSON.parse(todos_str);
@@ -70,7 +70,7 @@ console.log("tomt");
   console.log(todos);
   show();
  
- // return false;
+  return false;
   }
 }
 
@@ -182,7 +182,6 @@ console.log(i)
 
 };
 
-
   
 
 console.log(todos);
@@ -199,4 +198,4 @@ list.onclick = function(){
 
 
 document.getElementById('modalBtn').addEventListener('click', add);
-show();
+//show();
