@@ -42,7 +42,10 @@ function authenticateUser(username, password) {
         authenticationToken = responsJSON.auth; // Because this is where the server puts the token.
         authenticatedUser = responsJSON.user; // Information about the user. 
         console.log("yeah");
-        displayWelcome();
+        
+            displayWelcome();
+       
+        
         
     }).catch(function (err) {
         // fetch could not complete the request.
@@ -73,8 +76,11 @@ function displayLogin() {
 
 function displayWelcome() {
 
-
-    window.location = 'modal-index.html';
+   
+        window.location = 'modal-index.html';
+   
+    
+  
 
    
 }
