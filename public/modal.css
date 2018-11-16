@@ -121,9 +121,9 @@ input{
 }
 
 .editBttn{
-    background-color: rgb(30, 144, 255, 0.5);
+   
     border: none;
-    color: white;
+    
     padding: 12px 16px;
     font-size: 16px;
     cursor: pointer;
@@ -131,7 +131,12 @@ input{
     max-width: 30px;
     max-height: 40px;
     margin-left: 11px;
-
+    background-image: url("./js/check.jpg");
+    background-position: center;
+    background-size: 45px 45px;
+    opacity: 0.5;
+  
+    
 }
 
 

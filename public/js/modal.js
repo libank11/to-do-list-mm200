@@ -1,16 +1,16 @@
 function clearInput(){
     
 }
-    
+  
 /// if the submit butto is clicked, the modal closes
     modalBtn.onclick = function(){
         modal.style.display = "none";
         
         
         //delay of clear inputvalue function
-        /*setTimeout(function() {
+        setTimeout(function() {
             document.getElementById("task").value="";
-        },1000);*/
+        },100);
     }
 var modal = document.getElementById('myModal');
 
@@ -83,9 +83,25 @@ function remove() {
   return false;
 }
 
+function check() {
+    console.log("hey");
+   
+    var id = this.getAttribute('id');
+    var todos = get_todos();
+    todos.strike(id,1)
+    var todos2 = document.getElementById(id);
+    //todos2.style.setProperty("text-decoration", "line-through");
+    
 
-function listModal(){
-    console.log("hey")
+    localStorage.setItem('todo', JSON.stringify(todos));
+    show();
+    modal.style.display = "none";
+    return false;
+  }
+
+
+
+    console.log("check")
     
 //second modal
 
@@ -96,7 +112,9 @@ var editmodal = document.getElementById('editModal');
 var editBtn = document.getElementsByClassName("editBttn");
 
 // Get the <span> element that closes the modal
-var editSpan = document.getElementsByClassName("editClose")[0];
+let editSpan = document.getElementsByClassName("editClose")[0];
+
+let checkBtn = document.getElementById("checkModalBtn");
 
 // When the user clicks the button, open the modal 
 editBtn.onclick = function() {
@@ -109,8 +127,8 @@ editSpan.onclick = function() {
 }
 
 
-}
-/*let form = document.getElementById("modalBtn");
+
+let form = document.getElementById("modalBtn");
 form.onclick = function (evt) {
 // Stops the form from submitting
 evt.preventDefault();
@@ -142,12 +160,20 @@ fetch('/app/lists',{
    console.error(err);
 });
 
-}*/
+}
+var input = document.getElementById("task");
+input.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        document.getElementById("modalBtn").click();
+    }
+});
 function show() {
     console.log("hey");
     let todos = get_todos();
+    
     let html = '<ul class="list">';
-    let button = '<button class="editBttn"><i class="fa fa-bars"></i></button>';
+    let button = '<button class="editBttn"></button>';
   
     for (var i = 0; i < todos.length; i++) {
          html +=  '<li  id="'+ i+ '">' + todos[i] + button;
@@ -174,10 +200,12 @@ console.log(i)
   button_modal[i].addEventListener('click', listModal);
   }*/
 
-  var editModal = document.getElementsByClassName('editBttn');
+ var editModal = document.getElementsByClassName('editBttn');
   for (var i = 0; i < editModal.length; i++) {
       localStorage.clear(todos);
-  editModal[i].addEventListener('click', listModal);
+  editModal[i].addEventListener('click', editBtn.onclick = function() {
+    editmodal.style.display = "block";
+});
  }
 
 };
@@ -198,4 +226,5 @@ list.onclick = function(){
 
 
 document.getElementById('modalBtn').addEventListener('click', add);
+document.getElementById('checkModalBtn').addEventListener('click', check);
 //show();
