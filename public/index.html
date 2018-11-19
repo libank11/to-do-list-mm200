@@ -1,28 +1,52 @@
 <!DOCTYPE html>
 <html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="cUser.css">
+
+</head>
 <body>
 
-    <form id="createUserForm">
-        <label for="userName">User name:</label>
-        <input type="text" id="userName" required>
-
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" required>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" required>
-
-        <button>Create</button>
-        <button onclick="loginBtn()">Login</button>
-
-    </form>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>  
+<div class="container">
+        <form id="createUserForm">
+           <div class="row">
+      <h2 style="text-align:center; color: antiquewhite;">Create User</h2>
    
-    <br>
-    <br>
 
-    
-    
 
-</body>
+      <div class="col">
+        <div class="hide-md-lg">
+          <p>Or sign in manually:</p>
+        </div>
+
+        <input id="userName" type="text" name="username" placeholder="Username" required>
+        <input id="email" type="email" name="password" placeholder="Email" required>
+        <input id="password" type="password" name="password" placeholder="Password" required>
+        <input type="submit" value="Create User">
+      </div>
+      
+    </div>
+  </form>
+</div>
+
+<div class="bottom-container">
+  <div class="row">
+    <div class="Bcol">
+      <a href="./login2.html" style="color:white" class="btn">Login</a>
+    </div>
+    <div class="Bcol">
+
+    </div>
+  </div>
+</div>
 <script src="./js/index.js"></script>
+</body>
 </html>

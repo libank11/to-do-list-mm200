@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
+
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-image: linear-gradient(#ee9ca7, #ffdde1);
+  background-image: linear-gradient(to bottom right,#8A2387, #E94057,#F27121);
   background-attachment: fixed;
     max-width: 650px;
     margin: auto;
@@ -15,15 +10,17 @@ body {
 
 * {
   box-sizing: border-box;
+  margin-bottom: 40px;
 }
 
 /* style the container */
-.container {
+#container {
   position: relative;
   border-radius: 5px;
   background-color: rgba(0, 0, 0, 0.3);
   padding: 20px 0 30px 0;
   text-align: center;
+  height: 305px;
 } 
 
 /* style inputs and link buttons */
@@ -82,6 +79,16 @@ input[type=submit]:hover {
   margin-top: 6px;
 }
 
+.Bcol {
+  
+  width: 50%;
+  margin: auto;
+  padding: 0 50px;
+  margin-top: 3px;
+  border-radius: 45px;
+  
+}
+
 /* Clear floats after the columns */
 .row:after {
   content: "";
@@ -118,7 +125,7 @@ input[type=submit]:hover {
 .bottom-container {
   text-align: center;
   background-color: #666;
-  border-radius: 0px 0px 4px 4px;
+  border-radius: 5px;
 }
 
 /* Responsive layout - when the screen is less than 650px wide, make the two columns stack on top of each other instead of next to each other */
@@ -137,43 +144,14 @@ input[type=submit]:hover {
     text-align: center;
   }
 }
-</style>
-</head>
-<body>
 
-<h2 style="text-align:center;">Login to your To-Do-List</h2>
+.card.error{
 
-<div class="container">
-  <form action="/action_page.php">
-    <div class="row">
-      <h2 style="text-align:center">Login</h2>
-   
-
-
-      <div class="col">
-        <div class="hide-md-lg">
-          <p>Or sign in manually:</p>
-        </div>
-
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="submit" value="Login">
-      </div>
-      
-    </div>
-  </form>
-</div>
-
-<div class="bottom-container">
-  <div class="row">
-    <div class="col">
-      <a href="#" style="color:white" class="btn">Sign up</a>
-    </div>
-    <div class="col">
-      <a href="#" style="color:white" class="btn">Forgot password?</a>
-    </div>
-  </div>
-</div>
-
-</body>
-</html>
+   color: antiquewhite;
+    background-color: red;
+   margin-top: 74px;
+   height: 134px;
+   padding-top: 1px;
+   padding-left: 5px;
+   width: 250px;    
+}

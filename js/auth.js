@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const app = express();
-var db = require("./db.js");
+const db = require("./db.js");
 
 const SUPER_SECRET_KEY = process.env.TOKEN_KEY|| "Tokens";
 
@@ -39,6 +39,7 @@ app.get("/app/authenticate", async function (req, res, next) {
                 username: user.name
             }, SUPER_SECRET_KEY); 
             console.log(token)// Create token 
+            
 
             res.status(200).send({
                 auth: token,

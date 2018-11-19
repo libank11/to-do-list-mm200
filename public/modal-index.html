@@ -15,8 +15,8 @@
 
 <body>
         <ul class="header">
-                <li><a href="#news">Create User</a></li>
-                <li><a class="active" href="#home">Login</a></li>
+                <li><a href="./index.html">Create User</a></li>
+                <li><a class="active" href="./login.html">Login</a></li>
                
                
             
@@ -39,8 +39,19 @@
   <div class="modal-content">
    
     <span class="close">&times;</span>
+    
    <input id="task" type="text" placeholder="What do you want to remember">
-  
+   <p align="center">Deadline</p>
+   <div align="center" class="numberInput">
+    
+      <input type="text" id="month" placeholder="Month">
+      <input type="text" id="day" placeholder="Day">
+      <input type="text" id="year" placeholder="Year">
+      <input type="text" id="hour" placeholder="Hour">
+      <input type="text" id="min" placeholder="Min">
+      <input type="text" id="sek" placeholder="Sek">
+      
+  </div>
  
    <button id="modalBtn">submit</button>
   
@@ -54,7 +65,7 @@
         <div class="editModal-content">
           <span class="editClose">&times;</span>
          <input id="editTask" type="text" placeholder="Subject">
-         <input type="text" placeholder="Description">
+        
          <button id="checkModalBtn">check</button>
          <button id="editModalBtn">submit</button>
         </div>
@@ -64,5 +75,6 @@
 <script src="./js/modal.js">
 
 </script>
+
 </body>
 </html>

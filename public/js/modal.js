@@ -5,7 +5,7 @@ function clearInput(){
 /// if the submit butto is clicked, the modal closes
     modalBtn.onclick = function(){
         modal.style.display = "none";
-        
+        settimer();
         
         //delay of clear inputvalue function
         setTimeout(function() {
@@ -23,6 +23,7 @@ var span = document.getElementsByClassName("close")[0];
 // When the user clicks the button, open the modal 
 btn.onclick = function() {
     modal.style.display = "block";
+    
 }
 
 // When the user clicks on <span> (x), close the modal
@@ -39,12 +40,12 @@ window.onclick = function(event) {
 
 
 
-
+var timer;
 var todos = [];
 
 function get_todos() {
          
-         var todos_str = localStorage.getItem('todo1');
+         var todos_str = localStorage.getItem('todo');
          
          if (todos_str !== null) {
            todos = JSON.parse(todos_str);
@@ -93,7 +94,7 @@ function check() {
     //todos2.style.setProperty("text-decoration", "line-through");
     
 
-    localStorage.setItem('todo', JSON.stringify(todos));
+    //localStorage.setItem('todo', JSON.stringify(todos));
     show();
     modal.style.display = "none";
     return false;
@@ -130,6 +131,8 @@ editSpan.onclick = function() {
 
 let form = document.getElementById("modalBtn");
 form.onclick = function (evt) {
+
+    settimer();
 // Stops the form from submitting
 evt.preventDefault();
 modal.style.display = "none";
@@ -171,12 +174,13 @@ input.addEventListener("keyup", function(event) {
 function show() {
     console.log("hey");
     let todos = get_todos();
-    
+
+    let time = '<p id="timer_value">';
     let html = '<ul class="list">';
     let button = '<button class="editBttn"></button>';
   
     for (var i = 0; i < todos.length; i++) {
-         html +=  '<li  id="'+ i+ '">' + todos[i] + button;
+        html +=  '<li  id="'+ i+ '">' + todos[i] + button + time;
          console.log("kjører")
          
             
@@ -227,4 +231,55 @@ list.onclick = function(){
 
 document.getElementById('modalBtn').addEventListener('click', add);
 document.getElementById('checkModalBtn').addEventListener('click', check);
-//show();
+show();
+
+
+//Deadline function
+
+function settimer(){
+   
+ clearInterval(timer);
+
+ var timer_month=document.getElementById("month").value;
+ var timer_day=document.getElementById("day").value;
+ var timer_year=document.getElementById("year").value;
+ var timer_hour=document.getElementById("hour").value;
+ if(timer_hour=="")timer_hour=0;
+ var timer_min=document.getElementById("min").value;
+ if(timer_min=="")timer_min=0;
+ var timer_sek=document.getElementById("sek").value;
+ var timer_date=timer_month+"/"+timer_day+"/"+timer_year+" "+timer_hour+":"+timer_min+":"+timer_sek;
+ 
+ 
+ var end = new Date(timer_date); // Arrange values in Date Time Format
+ 
+ var second = 1000; // Total Millisecond In One Sec
+ var minute = second * 60; // Total Sec In One Min
+ var hour = minute * 60; // Total Min In One Hour
+ var day = hour * 24; // Total Hour In One Day
+
+ function showtimer() {
+    var now = new Date(); // Get Current date time
+  var remain = end - now; // Get The Difference Between Current and entered date time
+  console.log(timer_date);
+
+  if(remain < 0) 
+  {
+   clearInterval(timer);
+   document.getElementById("timer_value").innerHTML = 'Deadline Now!';
+   return;
+  }
+  
+  var days = Math.floor(remain / day); // Get Remaining Days
+  var hours = Math.floor((remain % day) / hour); // Get Remaining Hours
+  var minutes = Math.floor((remain % hour) / minute); // Get Remaining Min
+  var seconds = Math.floor((remain % minute) / second); // Get Remaining Sec
+ 
+  document.getElementById("timer_value").innerHTML = days + 'Days ';
+  
+  if(days < 1){
+    document.getElementById("timer_value").innerHTML = '1 day left'; 
+  }
+ }
+ timer = setInterval(showtimer, 1000); // Display Timer In Every 1 Sec
+}

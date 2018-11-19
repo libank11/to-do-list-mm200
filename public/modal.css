@@ -201,11 +201,7 @@ input{
     border-radius: 4px;
 }
 
-input{
-    width: 50%;
-    display: block;
-    margin: 15px 123px 15px;
-}
+
 
 .list{
     color: white;
@@ -258,3 +254,13 @@ input{
     background-color: #111;
 }
 
+
+
+.numberInput input{
+
+    max-width: 50px;
+   display: inline;
+    margin: auto;
+  
+    
+}
