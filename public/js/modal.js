@@ -45,7 +45,7 @@ var todos = [];
 
 function get_todos() {
          
-         var todos_str = localStorage.getItem('todo');
+         var todos_str = localStorage.getItem('todos');
          
          if (todos_str !== null) {
            todos = JSON.parse(todos_str);
@@ -253,10 +253,10 @@ function settimer(){
  
  var end = new Date(timer_date); // Arrange values in Date Time Format
  
- var second = 1000; // Total Millisecond In One Sec
- var minute = second * 60; // Total Sec In One Min
- var hour = minute * 60; // Total Min In One Hour
- var day = hour * 24; // Total Hour In One Day
+ var second = 1000; 
+ var minute = second * 60; 
+ var hour = minute * 60; 
+ var day = hour * 24; 
 
  function showtimer() {
     var now = new Date(); // Get Current date time
@@ -270,10 +270,10 @@ function settimer(){
    return;
   }
   
-  var days = Math.floor(remain / day); // Get Remaining Days
-  var hours = Math.floor((remain % day) / hour); // Get Remaining Hours
-  var minutes = Math.floor((remain % hour) / minute); // Get Remaining Min
-  var seconds = Math.floor((remain % minute) / second); // Get Remaining Sec
+  var days = Math.floor(remain / day); 
+  var hours = Math.floor((remain % day) / hour); 
+  var minutes = Math.floor((remain % hour) / minute); 
+  var seconds = Math.floor((remain % minute) / second); 
  
   document.getElementById("timer_value").innerHTML = days + 'Days ';
   

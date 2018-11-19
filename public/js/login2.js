@@ -41,7 +41,7 @@ function authenticateUser(username, password) {
       
         authenticationToken = responsJSON.auth; // Because this is where the server puts the token.
         authenticatedUser = responsJSON.user; // Information about the user. 
-        localStorage.setItem('authenticationToken', JSON.stringify(todos));
+        //localStorage.setItem('authenticationToken', JSON.stringify(todos));
         console.log(authenticationToken);
         
             displayWelcome();
