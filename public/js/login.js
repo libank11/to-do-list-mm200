@@ -11,7 +11,7 @@ var authenticatedUser = null;
 
 // Ask the server to verify that there is a user with the given username and password registerd.
 function authenticateUser(username, password) {
-    log("Starting authentication request", `Username ${username}`, `Password ${password}`);
+    console.log("Starting authentication request", `Username ${username}`, `Password ${password}`);
 
     // We are going to base our authentication on basic authentication. This is a authentication scheme suported by http (RFC 7617)
    
@@ -80,18 +80,7 @@ function displayLogin() {
     addToContainer(loginView);
 }
 
-function displayWelcome() {
 
-   clearContainer();
-      //  window.location = 'main.html';
-   
-       
-        localStorage.setItem('Token', JSON.stringify(authenticationToken))
-        let createTaskForm =  getTemplate("createTaskTemplate");
-        document.getElementById("container").appendChild(createTaskForm);
-
-   
-}
 
 function displayError(msg) {
     let errView = document.getElementById("errorView");
@@ -153,7 +142,7 @@ function displayWelcome() {
              // Stops the form from submitting
              evt.preventDefault();
             
-         
+         //Putting the content and a user id in the database-----------------------------
              let inputText = document.getElementById("innhold").value;
          
          
@@ -182,4 +171,50 @@ function displayWelcome() {
              });
          
          }
- }
+ 
+
+
+}
+
+
+function modal(){
+
+// Modal functions
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function () {
+    modal.style.display = "block";
+
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function () {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+
+//Enter key for button
+
+var input = document.getElementById("task");
+input.addEventListener("keyup", function (event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        document.getElementById("modalBtn").click();
+    }
+});
+
+}
