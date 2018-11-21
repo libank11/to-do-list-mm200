@@ -1,8 +1,10 @@
 var express = require('express')
 var router = express.Router();
 var db = require("./db.js");
+const auth = require("./auth.js");
 
-router.get('/app/lists',async function(req,res,next){
+
+/*router.get('/app/lists',async function(req,res,next){
     let query = `Select * from "public"."lists" `;
     let listArray = await db.select(query);
     if(listArray){
@@ -10,9 +12,9 @@ router.get('/app/lists',async function(req,res,next){
     }else{
         console.log("feil")
     }
-});
+});*/
 
-router.post('/app/lists',async function(req,res,next){
+router.post('/app/lists', async function(req,res,next){
 
 
     console.log("Request ----------------------------------------------");
@@ -20,10 +22,11 @@ router.post('/app/lists',async function(req,res,next){
     console.log("Request ----------------------------------------------");
   
     let listContent = req.body.inputText;
+    let  authenticatedUser = req.body.user.id;
     
 
-    let query = `INSERT INTO "public"."lists"("listcontent") 
-        VALUES('${listContent}') RETURNING "listid","userid","listcontent"`;
+    let query = `INSERT INTO "public"."lists"("listcontent", "userid") 
+        VALUES('${listContent}', '${authenticatedUser}') RETURNING "listid","listcontent", "userid"`;
 
     let code = await db.insert(query) ? 200:500;
     res.status(code).json({}).end()
@@ -31,15 +34,14 @@ router.post('/app/lists',async function(req,res,next){
 
 
 
-/*router.get('/app/user/:userName', async function(req,res,next){
+router.get('/app/lists/:userid', async function(req,res,next){
 
     
 
-    let paswordHash = req.body.pswHash;
-    let userName = req.params["userName"];
+ 
+    let userName = req.params.userid;
 
-    let query = `Select * from "public"."user" where userName='${userName}' 
-    and hash='${paswordHash}'`;
+    let query = `SELECT * from "public"."lists" WHERE userid='${userName}'`;
 
     let user = await db.select(query) ;
 
@@ -49,7 +51,7 @@ router.post('/app/lists',async function(req,res,next){
     } else{
         res.status(401).json({}).end();
     }
-})*/
+})
 
 
 

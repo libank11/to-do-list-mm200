@@ -54,7 +54,27 @@ function authenticateUser(username, password) {
     });
 
 }
-
+function login() {
+    let request = {
+        method: "GET",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-auth': authenticationToken
+        }
+    }
+    fetch("/app/authenticate", request).then(function (res) {
+        if (res.status < 400) {
+            return res.json();
+        } else {
+            return Promise.reject(new Error("Session not valid. log inn again"));
+        }
+    }).then(function (json) {
+        window.location = 'modal-index.html';
+    }).catch(function (err) {
+        displayError(err.message);
+    });
+}
 
 
 
@@ -78,8 +98,9 @@ function displayLogin() {
 function displayWelcome() {
 
    
-        window.location = 'modal-index.html';
+        
    
+        login();
     
   
 

@@ -1,11 +1,11 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const app = express();
 const db = require("./db.js");
 
-const SUPER_SECRET_KEY = process.env.TOKEN_KEY|| "Tokens";
+const SUPER_SECRET_KEY = process.env.TOKEN_KEY|| "Mr.tokenguy";
 
 
 
@@ -34,6 +34,7 @@ app.get("/app/authenticate", async function (req, res, next) {
             // There was a user in the database with the correct username and password
             // This is where we are diverging from the basic authentication standard. by creating a token for the client to use in all later corespondanse. 
             console.log("User is authenticated");
+            console.log(user);
             let token = jwt.sign({
                 id: user.id,
                 username: user.name
@@ -57,6 +58,16 @@ app.get("/app/authenticate", async function (req, res, next) {
     }
 });
 
+
+app.get("/app/authenticate", validateAuthentication, function (req, res, next) {
+    log(`request token ${req.token}`); // we can se who is using this endpoint because we now have a decoded token.
+    let quote = getRandomQuote();
+    res.status(200).json({
+        quote: quote
+    });
+});
+
+
 async function databaseQuery(username,password) {
    
    
@@ -78,6 +89,8 @@ async function databaseQuery(username,password) {
         console.log("sjekker")
         if (!isCorrect) {
             foundUser = null;
+        } else{
+            foundUser = foundUser[0]
         }
     }
     else{
@@ -87,4 +100,19 @@ async function databaseQuery(username,password) {
 
     return Promise.resolve(foundUser);
 }
-module.exports = app;
+
+
+function validateAuthentication(req, res, next) {
+    let token = req.headers['x-access-token'] || req.body.token || req.params.token; // Suporting 3 ways of submiting token
+    console.log(token);
+    try {
+        let decodedToken = jwt.verify(token, SUPER_SECRET_KEY); // Is the token valid?
+        req.token = decodedToken; // we make the token available for later functions via the request object.
+        console.log("bruker er Authenticated");
+        next(); // The token was valid so we continue 
+    } catch (err) {
+        res.status(401).end(); // The token could not be validated so we tell the user to log in again.
+    }
+}
+
+module.exports = {router:app, authenticate:validateAuthentication};

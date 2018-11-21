@@ -2,7 +2,10 @@ const DEBUG = true;
 var authenticationToken = null;
 var authenticatedUser = null;
 
-(function () { // Start point for our litle demo.
+
+//Displayer Login--------------------------
+
+(function () { 
     displayLogin();
 })()
 
@@ -11,7 +14,7 @@ function authenticateUser(username, password) {
     log("Starting authentication request", `Username ${username}`, `Password ${password}`);
 
     // We are going to base our authentication on basic authentication. This is a authentication scheme suported by http (RFC 7617)
-    // Read more about it at https://en.wikipedia.org/wiki/Basic_access_authentication and https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#Basic_authentication_scheme
+   
 
     let credentials = `Basic ${ btoa(username + ":" + password)}`; // This creates a string that looks similar to  "Basic KL9zxHppU2VCX". btoa is a function of the window object.
 
@@ -41,7 +44,10 @@ function authenticateUser(username, password) {
       
         authenticationToken = responsJSON.auth; // Because this is where the server puts the token.
         authenticatedUser = responsJSON.user; // Information about the user. 
-        console.log("yeah");
+    
+        console.log(authenticationToken);
+        console.log(authenticatedUser);
+        
         
             displayWelcome();
        
@@ -76,11 +82,13 @@ function displayLogin() {
 
 function displayWelcome() {
 
+   clearContainer();
+      //  window.location = 'main.html';
    
-        window.location = 'modal-index.html';
-   
-    
-  
+       
+        localStorage.setItem('Token', JSON.stringify(authenticationToken))
+        let createTaskForm =  getTemplate("createTaskTemplate");
+        document.getElementById("container").appendChild(createTaskForm);
 
    
 }
@@ -89,6 +97,7 @@ function displayError(msg) {
     let errView = document.getElementById("errorView");
     errView.removeAttribute("hidden");
     errView.querySelector("#msg").textContent = msg;
+    console.log(msg)
 }
 
 function hideError() {
@@ -122,3 +131,55 @@ function log(...messages) {
         })
     }
 }
+
+
+//--------Main app----------------------------------------------------
+
+
+function displayWelcome() {
+
+    clearContainer();
+       //  window.location = 'main.html';
+    
+        
+         localStorage.setItem('Token', JSON.stringify(authenticationToken))
+         let createTaskForm =  getTemplate("createTaskTemplate");
+         document.getElementById("container").appendChild(createTaskForm);
+ 
+         let form = document.getElementById("submitTask");
+         form.onclick = function (evt) {
+         
+            
+             // Stops the form from submitting
+             evt.preventDefault();
+            
+         
+             let inputText = document.getElementById("innhold").value;
+         
+         
+             fetch('/app/lists', {
+                 method: "POST",
+                 body: JSON.stringify({
+                 inputText,
+                 user:authenticatedUser,
+                 token:authenticationToken
+                     
+                 }),
+                 headers: {
+                     "Content-Type": "application/json; charset=utf-8"
+                 },
+         
+             }).then(function (data) {
+                 if (data.status < 400) {
+                     document.getElementById("innhold").value = "";
+                     console.log(data);
+                     return data.json();
+         
+                 }
+         
+             }).catch(err => {
+                 console.error(err);
+             });
+         
+         }
+ }
