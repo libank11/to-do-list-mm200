@@ -49,7 +49,7 @@ function authenticateUser(username, password) {
         console.log(authenticatedUser);
         
         
-            displayWelcome();
+           modal();
        
         
         
@@ -178,43 +178,151 @@ function displayWelcome() {
 
 
 function modal(){
+    
 
-// Modal functions
-var modal = document.getElementById('myModal');
+    clearContainer();
+  
+    localStorage.setItem('Token', JSON.stringify(authenticationToken))
+    let createTaskForm =  getTemplate("modal");
+    document.getElementById("container").appendChild(createTaskForm);
 
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+            let form = document.getElementById("modalBtn");
+            form.onclick = function (evt) {
+            
+            
+                // Stops the form from submitting
+                evt.preventDefault();
+            
+            //Putting the content and a user id in the database-----------------------------
+                let inputText = document.getElementById("task").value;
+            if(inputText.length == 0){
+                inputText.value = "";
+                document.getElementById("task").placeholder = "Tomt. Prøv igjen";
 
-// When the user clicks the button, open the modal 
-btn.onclick = function () {
-    modal.style.display = "block";
+            }else{
+                fetch('/app/lists', {
+                    method: "POST",
+                    body: JSON.stringify({
+                    inputText,
+                    user:authenticatedUser,
+                    token:authenticationToken
+                        
+                    }),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+            
+                }).then(function (data) {
+                    if (data.status < 400) {
+                        document.getElementById("task").value = "";
+                        console.log(data);
+                        return data.json();
+            
+                    }
+            
+                }).catch(err => {
+                    console.error(err);
+                });
 
-}
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function () {
-    modal.style.display = "none";
-}
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
+            }
+            
+               
+            
+            }
+
+
+    
+
+// Modal functions-------------------------
+
+            var modal = document.getElementById('myModal');
+
+            // Get the button that opens the modal
+            var btn = document.getElementById("myBtn");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks the button, open the modal 
+            btn.onclick = function () {
+                modal.style.display = "block";
+
+            }
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
 }
 
 
 //Enter key for button
-
+/*
 var input = document.getElementById("task");
 input.addEventListener("keyup", function (event) {
     event.preventDefault();
     if (event.keyCode === 13) {
         document.getElementById("modalBtn").click();
     }
-});
+});*/
 
+}
+
+
+
+//Deadline function--------------------------------
+function settimer() {
+
+    clearInterval(timer);
+
+    var timer_month = document.getElementById("month").value;
+    var timer_day = document.getElementById("day").value;
+    var timer_year = document.getElementById("year").value;
+    var timer_hour = document.getElementById("hour").value;
+    if (timer_hour == "") timer_hour = 0;
+    var timer_min = document.getElementById("min").value;
+    if (timer_min == "") timer_min = 0;
+    var timer_sek = document.getElementById("sek").value;
+    var timer_date = timer_month + "/" + timer_day + "/" + timer_year + " " + timer_hour + ":" + timer_min + ":" + timer_sek;
+
+
+    var end = new Date(timer_date); // Arrange values in Date Time Format
+
+    var second = 1000;
+    var minute = second * 60;
+    var hour = minute * 60;
+    var day = hour * 24;
+
+    function showtimer() {
+        var now = new Date(); // Get Current date time
+        var remain = end - now; // Get The Difference Between Current and entered date time
+        console.log(timer_date);
+
+        if (remain < 0) {
+            clearInterval(timer);
+            document.getElementById("timer_value").innerHTML = 'Deadline Now!';
+            return;
+        }
+
+        var days = Math.floor(remain / day);
+        var hours = Math.floor((remain % day) / hour);
+        var minutes = Math.floor((remain % hour) / minute);
+        var seconds = Math.floor((remain % minute) / second);
+
+        document.getElementById("timer_value").innerHTML = days + 'Days ';
+
+        if (days < 1) {
+            document.getElementById("timer_value").innerHTML = '1 day left';
+        }
+    }
+    timer = setInterval(showtimer, 1000000); // Display Timer In Every 1 Sec
 }

@@ -103,22 +103,27 @@
   <div class="modal-content">
    
     <span class="close">&times;</span>
-    
-   <input id="task" type="text" placeholder="What do you want to remember">
+    <form id="modalForm">
+   <input id="task" type="text" placeholder="Tittel">
    <p align="center">Deadline</p>
-   <div align="center" class="numberInput">
+   <div  class="dateInput">
     
       <input type="text" id="month" placeholder="Month">
       <input type="text" id="day" placeholder="Day">
       <input type="text" id="year" placeholder="Year">
+    </div>
+    <br>
+    <br>
+      <div class="timeInput">
+    
       <input type="text" id="hour" placeholder="Hour">
       <input type="text" id="min" placeholder="Min">
-      <input type="text" id="sek" placeholder="Sek">
+   </div>
       
-  </div>
+  
  
    <button id="modalBtn">submit</button>
-  
+  </form>
   </div>
 
 </div>

@@ -37,6 +37,8 @@ async function runQuery(query) {
         console.log("Error ");
         console.log(e);
         /*OOPS*/
+    } finally {
+        client.end();
     }
 
     return respons;
