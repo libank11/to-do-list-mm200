@@ -3,6 +3,7 @@ var authenticationToken = null;
 var authenticatedUser = null;
 
 
+
 //Displayer Login--------------------------
 
 (function () { 
@@ -50,6 +51,7 @@ function authenticateUser(username, password) {
         
         
            modal();
+           fetchData();
        
         
         
@@ -326,3 +328,102 @@ function settimer() {
     }
     timer = setInterval(showtimer, 1000000); // Display Timer In Every 1 Sec
 }
+
+
+//Fetch list from DB----------------------------
+
+function fetchData(){
+
+
+
+let data = JSON.stringify({
+	token: authenticationToken,
+	user: authenticatedUser
+});
+
+
+let myPresentation;
+
+fetch('/app/lists/load/', {
+	method: 'POST',
+	headers: {
+		"Content-Type": "application/json; charset=utf-8",
+    "Authorization": authenticatedUser
+	},
+	body: data
+}).then(response => {
+	if (response.status < 400) {
+    console.log("loading")
+    loadLists(response);
+	} else {
+		// TODO: MESSAGE
+		console.log('Did not load presentation :(');
+	}
+}).catch(err => console.error(err));
+
+
+}
+
+
+async function loadPresentation(response) {
+	let data = await response.json();
+	let presentationJSON = data[0].presentation_json;
+	console.log(presentationJSON);
+	myPresentation = parseJSONToPresentation(presentationJSON);
+	console.log(myPresentation.getSlides().length);
+	if (myPresentation.getSlides().length === 0) {
+			addFirstSlide();
+			console.log("length : " + myPresentation.getSlides().length);
+			console.log('Adding first slide...');
+	} else {
+		console.log('no first slide');
+		console.log("length : " + myPresentation.getSlides());
+		goToSlide(0);
+	}
+
+	
+}
+
+
+async function loadLists(respons){
+    let data = await respons.json();
+    //let listJSON = data[0].
+    console.log(data);
+   // content = document.getElementById("container");
+    //content.innerHTML = data[0].listcontent;
+    let view = document.createElement("div");
+let listForDisplay = "";//view;
+    let postC = data[0].listcontent;
+    //let postC = ["hello", "world"]
+    for (let i = 0; i < data.length; i++) {
+console.log("DB")
+        //let postCd = data[i].listcontent;
+        let postCd = data[i].listcontent;
+        let postF = data[i].frist;
+
+        
+        let div = document.createElement("div");
+        div.id = "lists";
+
+
+        let DBlist = `
+        <div id="${i}"
+        <p>Descrition: ${postCd}</p>
+        <p>Descrition: ${postF}</p>
+        </div>`;
+        
+        div.innerHTML = DBlist;
+        div.id = i;
+       // view.appendChild(div);
+        console.log("DB1")
+        listForDisplay += DBlist;
+       // document.getElementById("container").innerHTML += div;
+
+    }
+console.log(listForDisplay)
+//document.getElementById("container").innerHTML = div;
+//let display = document.getElementById("container");
+document.getElementById("container").innerHTML = listForDisplay;
+
+}
+
