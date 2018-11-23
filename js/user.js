@@ -60,6 +60,16 @@ router.get('/app/user/:userName', async function(req,res,next){
 })
 
 
+router.post('/app/user', async function(req,res,next){
+
+
+
+
+
+
+
+})
+
 
 
 

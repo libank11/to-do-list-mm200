@@ -132,7 +132,7 @@ function displayWelcome() {
     clearContainer();
        //  window.location = 'main.html';
     
-        
+      
          localStorage.setItem('Token', JSON.stringify(authenticationToken))
          let createTaskForm =  getTemplate("createTaskTemplate");
          document.getElementById("container").appendChild(createTaskForm);
@@ -165,6 +165,7 @@ function displayWelcome() {
                      document.getElementById("innhold").value = "";
                      console.log(data);
                      return data.json();
+                    
          
                  }
          
@@ -181,9 +182,9 @@ function displayWelcome() {
 
 function modal(){
     
-
+   
     clearContainer();
-  
+    
     localStorage.setItem('Token', JSON.stringify(authenticationToken))
     let createTaskForm =  getTemplate("modal");
     document.getElementById("container").appendChild(createTaskForm);
@@ -192,10 +193,10 @@ function modal(){
             let form = document.getElementById("modalBtn");
             form.onclick = function (evt) {
             
-            
+               
                 // Stops the form from submitting
                 evt.preventDefault();
-            
+                
             //Putting the content and a user id in the database-----------------------------
                 let inputText = document.getElementById("task").value;
             if(inputText.length == 0){
@@ -219,8 +220,9 @@ function modal(){
                     if (data.status < 400) {
                         document.getElementById("task").value = "";
                         console.log(data);
+                        fetchData();
                         return data.json();
-            
+                        
                     }
             
                 }).catch(err => {
@@ -231,7 +233,7 @@ function modal(){
 
             }
             
-               
+              
             
             }
 
@@ -342,7 +344,7 @@ let data = JSON.stringify({
 });
 
 
-let myPresentation;
+
 
 fetch('/app/lists/load/', {
 	method: 'POST',
@@ -354,7 +356,7 @@ fetch('/app/lists/load/', {
 }).then(response => {
 	if (response.status < 400) {
     console.log("loading")
-    loadLists(response);
+        loadLists(response);
 	} else {
 		// TODO: MESSAGE
 		console.log('Did not load presentation :(');
@@ -365,24 +367,7 @@ fetch('/app/lists/load/', {
 }
 
 
-async function loadPresentation(response) {
-	let data = await response.json();
-	let presentationJSON = data[0].presentation_json;
-	console.log(presentationJSON);
-	myPresentation = parseJSONToPresentation(presentationJSON);
-	console.log(myPresentation.getSlides().length);
-	if (myPresentation.getSlides().length === 0) {
-			addFirstSlide();
-			console.log("length : " + myPresentation.getSlides().length);
-			console.log('Adding first slide...');
-	} else {
-		console.log('no first slide');
-		console.log("length : " + myPresentation.getSlides());
-		goToSlide(0);
-	}
 
-	
-}
 
 
 async function loadLists(respons){
@@ -393,29 +378,31 @@ async function loadLists(respons){
     //content.innerHTML = data[0].listcontent;
     let view = document.createElement("div");
 let listForDisplay = "";//view;
-    let postC = data[0].listcontent;
+   
     //let postC = ["hello", "world"]
     for (let i = 0; i < data.length; i++) {
-console.log("DB")
+        
         //let postCd = data[i].listcontent;
         let postCd = data[i].listcontent;
         let postF = data[i].frist;
+        let postlistId = data[i].listid;
 
-        
         let div = document.createElement("div");
         div.id = "lists";
 
 
         let DBlist = `
-        <div id="${i}"
+        <div id="${i}">
         <p>Descrition: ${postCd}</p>
         <p>Descrition: ${postF}</p>
+        
+        <button onclick="deleteListElement(${postlistId})")>delete</button>
         </div>`;
         
         div.innerHTML = DBlist;
         div.id = i;
        // view.appendChild(div);
-        console.log("DB1")
+       
         listForDisplay += DBlist;
        // document.getElementById("container").innerHTML += div;
 
@@ -423,7 +410,38 @@ console.log("DB")
 console.log(listForDisplay)
 //document.getElementById("container").innerHTML = div;
 //let display = document.getElementById("container");
-document.getElementById("container").innerHTML = listForDisplay;
+document.getElementById("todocontainer").innerHTML = listForDisplay;
 
 }
 
+function deleteListElement(listvalue){
+    
+    let data = JSON.stringify({
+        
+        listid : listvalue
+        
+    });
+    
+    fetch('/app/lists', {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+        "Authorization": authenticatedUser,
+        "Listid": listvalue 
+        },
+        body: data
+    }).then(response => {
+        if (response.status < 400) {
+        console.log("loading")
+            
+        } else {
+            // TODO: MESSAGE
+            console.log('Did not load presentation :(');
+        }
+    }).catch(err => console.error(err));
+
+    fetchData();
+            }
+
+
+            

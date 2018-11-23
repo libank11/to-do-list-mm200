@@ -31,6 +31,9 @@ router.post('/app/lists', async function(req,res,next){
     let code = await db.insert(query) ? 200:500;
     res.status(code).json({}).end()
 })
+
+
+
 router.post('/app/lists/load', async function(req,res,next){
 
 
@@ -72,7 +75,7 @@ router.get('/app/lists/load/:userid', async function(req,res,next){
     }
 })
 
-router.get('/app/lists/:userid', async function(req,res,next){
+/*router.get('/app/lists/:userid', async function(req,res,next){
 
     
 
@@ -91,6 +94,38 @@ router.get('/app/lists/:userid', async function(req,res,next){
     }
 })
 
+*/
+
+router.delete('/app/lists/', async function(req, res) {
+    
+    
+    //let userid = req.params.user.id;
+     let listid = req.body.listid
+
+ 
+
+     let queryDeleteListContent = `DELETE FROM "public"."lists" WHERE "listid" = '${listid}' RETURNING *`;
+     let deleted = await db.delete(queryDeleteListContent);
+     let status = deleted ? 200 : 500;
+         res.status(status).json({}).end();
+
+ 
+});
+router.delete('/app/lists/:userid', async function(req, res) {
+    
+    
+       //let userid = req.params.user.id;
+        let listid = req.body.listid
+
+    
+
+        let queryDeleteListContent = `DELETE FROM "public"."lists" WHERE "listid" = '${listid}' RETURNING *`;
+        let deleted = await db.delete(queryDeleteListContent);
+        let status = deleted ? 200 : 500;
+            res.status(status).json({}).end();
+  
+    
+  });
 
 
 
