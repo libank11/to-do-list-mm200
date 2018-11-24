@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="modal.css">
+  
+ 
+    
+    
+
+</head>
+
+
+<body>
+        <ul class="header">
+                <li><a href="./index.html">Create User</a></li>
+                <li><a class="active" href="./login.html">Login</a></li>
+               
+               
+            
+            </ul>
+
+
+
+
+<div id="content">
+<!-- Trigger/Open The Modal -->
+<button id="myBtn">Add</button>
+
+<div id="todos"></div>
+
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+   
+    <span class="close">&times;</span>
+    
+   <input id="task" type="text" placeholder="What do you want to remember">
+   <p align="center">Deadline</p>
+   <div align="center" class="numberInput">
+    
+      <input type="text" id="month" placeholder="Month">
+      <input type="text" id="day" placeholder="Day">
+      <input type="text" id="year" placeholder="Year">
+      <input type="text" id="hour" placeholder="Hour">
+      <input type="text" id="min" placeholder="Min">
+      <input type="text" id="sek" placeholder="Sek">
+      
+  </div>
+ 
+   <button id="modalBtn">submit</button>
+  
+  </div>
+
+</div>
+
+<div id="editModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="editModal-content">
+          <span class="editClose">&times;</span>
+         <input id="editTask" type="text" placeholder="Subject">
+        
+         <button id="checkModalBtn">check</button>
+         <button id="editModalBtn">submit</button>
+        </div>
+      
+      </div>
+</div>
+
+<div>
+  <button id="hey">hey</button>
+</div>
+<script src="./js/main-gamle.js">
+
+</script>
+
+</body>
+</html>

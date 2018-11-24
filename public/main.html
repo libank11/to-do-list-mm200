@@ -1,84 +1,151 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="modal.css">
-  
- 
-    
-    
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
+
+<link rel="stylesheet" href="main.css">
+<style>
+  *[hidden] {
+      display: none;
+  }
+  </style>
 </head>
-
-
 <body>
-        <ul class="header">
-                <li><a href="./index.html">Create User</a></li>
-                <li><a class="active" href="./login.html">Login</a></li>
-               
-               
-            
-            </ul>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>  
+<div id="container">
+
+</div>
+<div id="taskContainer">
+
+</div>
+
+<!--login template------------------------------>
+<template id="loginView">
+    <form id="loginForm">
+      
+    <div class="row">
+      <h2 style="text-align:center; color: antiquewhite;">Login</h2>
+   
+
+
+      <div class="col">
+        <div class="hide-md-lg">
+          <p>Or sign in manually:</p>
+        </div>
+
+        <input id="username"type="text" name="username" placeholder="Username" required>
+        <input id="password" type="password" name="password" placeholder="Password" required>
+        <input type="submit" value="Login">
+      </div>
+      
+    </div>
+    
+  </form>
+
+
+<div class="bottom-container">
+  <div class="row">
+    <div class="Bcol">
+      <a href="./index.html" style="color:white" class="btn">Sign up</a>
+    </div>
+    <div class="Bcol">
+
+    </div>
+  </div>
+</div>
+</template>
+
+<template id="createTaskTemplate">
+        
+  <form id="createTaskForm">
+      
+
+      <label for="description"></label> 
+      <input type="text" id="innhold"><br>
+      
+      <button type="button" id="submitTask">Submit</button>
+  </form>
+</template>
+
+<div id="errorView" class="card error" hidden>
+    <div class="section">
+        <h1>Error</h1>
+    </div>
+    <div class="section">
+        <p id="msg"></p>
+    </div>
+</div>
+
+<!--Main Modal------------------------------>
+
+
+<template id="modal">
 
 
 
 
 <div id="content">
-<!-- Trigger/Open The Modal -->
-<button id="myBtn">Add</button>
+  <!-- Trigger/Open The Modal -->
+  <button id="myBtn">Add</button>
+  
+  <div id="todos"></div>
 
-<div id="todos"></div>
 
 
-<!-- The Modal -->
 <div id="myModal" class="modal">
 
   <!-- Modal content -->
   <div class="modal-content">
    
     <span class="close">&times;</span>
-    
-   <input id="task" type="text" placeholder="What do you want to remember">
+    <form id="modalForm">
+      <p>What to Remember</p>
+   <input id="task" type="text" placeholder="Tittel">
    <p align="center">Deadline</p>
-   <div align="center" class="numberInput">
+   <div  class="dateInput">
     
       <input type="text" id="month" placeholder="Month">
       <input type="text" id="day" placeholder="Day">
       <input type="text" id="year" placeholder="Year">
+    </div>
+    <br>
+    <div class="vl"></div>
+    <br>
+      <div class="timeInput">
+    
       <input type="text" id="hour" placeholder="Hour">
       <input type="text" id="min" placeholder="Min">
-      <input type="text" id="sek" placeholder="Sek">
-      
-  </div>
- 
-   <button id="modalBtn">submit</button>
+   </div>
+   <p align="center" style="
+    margin-left: 101px;
+">Tag</p>
+
+   <div id="tags">
+    
+    <input type="text">
+    
+  
   
   </div>
+  
+  </form>
+   <button id="modalBtn">submit</button>
+  </form>
+  </div>
 
 </div>
+<div id="todocontainer"></div>
+</template>
 
-<div id="editModal" class="modal">
-
-        <!-- Modal content -->
-        <div class="editModal-content">
-          <span class="editClose">&times;</span>
-         <input id="editTask" type="text" placeholder="Subject">
-        
-         <button id="checkModalBtn">check</button>
-         <button id="editModalBtn">submit</button>
-        </div>
-      
-      </div>
-</div>
-
-<div>
-  <button id="hey">hey</button>
-</div>
-<script src="./js/main.js">
-
-</script>
+<script src="./js/main.js"></script>
 
 </body>
 </html>

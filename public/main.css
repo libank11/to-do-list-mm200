@@ -10,7 +10,7 @@ body {
 
 * {
   box-sizing: border-box;
-  margin-bottom: 40px;
+  margin-bottom: 22px;
 }
 
 /* style the container */
@@ -20,7 +20,17 @@ body {
   background-color: rgba(0, 0, 0, 0.3);
   padding: 20px 0 30px 0;
   text-align: center;
-  height: 305px;
+  height: 330px;
+}
+
+
+#taskContainer {
+  position: relative;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 20px 0 30px 0;
+  text-align: center;
+ overflow: hidden;
 } 
 
 /* style inputs and link buttons */
@@ -127,6 +137,7 @@ input[type=submit]:hover {
   text-align: center;
   background-color: #666;
   border-radius: 5px;
+  margin-bottom: -60px;
 }
 
 /* Responsive layout - when the screen is less than 650px wide, make the two columns stack on top of each other instead of next to each other */
@@ -234,9 +245,8 @@ input[type=submit]:hover {
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  
   width: 400px;
-  height: 290px;
+  overflow: hidden;
   border-radius: 7px;
   margin: 126px auto;
 }
@@ -255,7 +265,7 @@ input[type=submit]:hover {
   padding: 12px;
   border: none;
   border-radius: 4px;
-  margin: 5px 0;
+  margin: 0px 0px 30px 0px;
   opacity: 0.85;
   display: inline-block;
   font-size: 17px;
@@ -268,7 +278,7 @@ input[type=submit]:hover {
   padding: 12px;
   border: none;
   border-radius: 4px;
-  margin: 5px 0;
+  margin: 0px 0px 14px 0px;
   opacity: 0.85;
   display: inline-block;
   font-size: 17px;
@@ -293,12 +303,14 @@ input[type=submit]:hover {
 .dateInput input {
   width: 42px;
   float: left;
+  margin-right: 5px;
 
 }
 
 .timeInput input{
   width: 42px;
   float: left;
+  margin-right: 5px;
 
 }
 
@@ -306,4 +318,59 @@ input[type=submit]:hover {
 #list{
 
   color: white;
+}
+
+#todocontainer{
+color: wheat; 
+float: right;
+
+}
+
+#deleteBtn{
+    background-image: radial-gradient(#ED213A, #93291E);
+    border: none;
+    color: white;
+    padding: 15px 6px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    
+}
+
+
+ul{
+
+ float: right;
+ margin-bottom: -40px;  
+}
+
+
+.vl{
+  position: absolute;
+    left: 50%;
+    top: 375px;
+    transform: translate(6%);
+    border: 1px solid #ddd;
+    height: 50px;
+}
+
+.timeInput{
+  width: 100px;
+  text-align: center;
+  float: right;
+  margin-top: -37px;
+  
+}
+
+#pTittel{
+  margin: auto 0px 5px;
+}
+
+
+#tags{
+
+  margin-top: -15px;
 }

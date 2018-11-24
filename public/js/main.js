@@ -1,242 +1,305 @@
-function clearInput() {
-
-}
-
-/// if the submit butto is clicked, the modal closes
-modalBtn.onclick = function () {
-    modal.style.display = "none";
-    settimer();
-
-    //delay of clear inputvalue function
-    setTimeout(function () {
-        document.getElementById("task").value = "";
-    }, 100);
-}
-var modal = document.getElementById('myModal');
-
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal 
-btn.onclick = function () {
-    modal.style.display = "block";
-
-}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function () {
-    modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
+const DEBUG = true;
+var authenticationToken = null;
+var authenticatedUser = null;
 
 
 
-var timer;
-var todos = [];
+//Displayer Login--------------------------
 
-function get_todos() {
+(function () { 
+    displayLogin();
+})()
 
-    var todos_str = localStorage.getItem('todos');
+// Ask the server to verify that there is a user with the given username and password registerd.
+function authenticateUser(username, password) {
+    console.log("Starting authentication request", `Username ${username}`, `Password ${password}`);
 
-    if (todos_str !== null) {
-        todos = JSON.parse(todos_str);
-    }
-    return todos;
+    // We are going to base our authentication on basic authentication. This is a authentication scheme suported by http (RFC 7617)
+   
 
+    let credentials = `Basic ${ btoa(username + ":" + password)}`; // This creates a string that looks similar to  "Basic KL9zxHppU2VCX". btoa is a function of the window object.
 
-}
-
-function add() {
-    var inputTxt = document.getElementById('task').value;
-    var todos = get_todos();
-
-    if (inputTxt.length == 0) {
-        console.log("tomt");
-
-    }
-    else {
-        todos.push(inputTxt);
-
-
-        //localStorage.setItem('todo', JSON.stringify(todos));
-        console.log(todos);
-        show();
-
-        return false;
-    }
-}
-
-function remove() {
-    var id = this.getAttribute('id');
-    var todos = get_todos();
-    todos.splice(id, 1);
-    //localStorage.setItem('todo', JSON.stringify(todos));
-    show();
-    return false;
-}
-
-function check() {
-    console.log("hey");
-
-    var id = this.getAttribute('id');
-    var todos = get_todos();
-    todos.strike(id, 1)
-    var todos2 = document.getElementById(id);
-    //todos2.style.setProperty("text-decoration", "line-through");
-
-
-    //localStorage.setItem('todo', JSON.stringify(todos));
-    show();
-    modal.style.display = "none";
-    return false;
-}
-let hey = document.getElementById("hey");
-
-console.log("check")
-
-//second modal
-
-
-var editmodal = document.getElementById('editModal');
-
-// Get the button that opens the modal
-var editBtn = document.getElementsByClassName("editBttn");
-
-// Get the <span> element that closes the modal
-let editSpan = document.getElementsByClassName("editClose")[0];
-
-let checkBtn = document.getElementById("checkModalBtn");
-
-// When the user clicks the button, open the modal 
-editBtn.onclick = function () {
-    editmodal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-editSpan.onclick = function () {
-    editmodal.style.display = "none";
-}
-var oldToken = localStorage.Token;
-var token = oldToken.substr(1).slice(0, -1);
-
-console.log(token)
-
-
-let form = document.getElementById("modalBtn");
-form.onclick = function (evt) {
-
-    settimer();
-    // Stops the form from submitting
-    evt.preventDefault();
-    modal.style.display = "none";
-
-    let inputText = document.getElementById("task").value;
-
-
-    fetch('/app/lists', {
-        method: "POST",
-        body: JSON.stringify({
-        inputText,
-            token: token
-        }),
+    let request = {
+        method: "GET",
         headers: {
-            "Content-Type": "application/json; charset=utf-8"
-        },
-
-    }).then(function (data) {
-        if (data.status < 400) {
-            document.getElementById("task").value = "";
-            console.log(data);
-            return data.json();
-
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': credentials
         }
+    }
 
-    }).catch(err => {
-        console.error(err);
+    fetch("/app/authenticate", request).then(function (respons) {
+        if (respons.status < 400) {
+            console.log("bruker er logget inn"); 
+            // OK we are authenticated.
+            return respons.json(); // Grab the JSON payload. 
+           
+        } else if (respons.status === 401) {
+            // Username or password was wrong, informe the user.
+            return Promise.reject(new Error("Wrong username or password"));
+        } else {
+            // Some other thing went wrong.
+            return Promise.reject(new Error("Could not log you in at this time, try again later"));
+        }
+    }).then(function (responsJSON) {
+      
+        authenticationToken = responsJSON.auth; // Because this is where the server puts the token.
+        authenticatedUser = responsJSON.user; // Information about the user. 
+    
+        console.log(authenticationToken);
+        console.log(authenticatedUser);
+        
+        
+           modal();
+           fetchData();
+           var x = document.getElementById("container");
+           if (x.style.display === "none") {
+               x.style.display = "block";
+           } else {
+               x.style.display = "none";
+           }
+       
+        
+        
+    }).catch(function (err) {
+        // fetch could not complete the request.
+        displayError(err.message);
     });
 
 }
+
+
+
+
+// View code ----------------------------------------------------------------------------------
+// Moste things after this point is just UI code and not important for the discussion.
+
+function displayLogin() {
+    clearContainer();
+    let loginView = getTemplate("loginView")
+    let loginForm = loginView.querySelector("#loginForm")
+    loginForm.onsubmit = function (evt) {
+        evt.preventDefault();
+        hideError();
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        authenticateUser(username, password);
+    }
+    addToContainer(loginView);
+}
+
+
+
+function displayError(msg) {
+    let errView = document.getElementById("errorView");
+    errView.removeAttribute("hidden");
+    errView.querySelector("#msg").textContent = msg;
+    console.log(msg)
+}
+
+function hideError() {
+    let errView = document.getElementById("errorView");
+    errView.setAttribute("hidden", true);
+}
+
+// Utility functions ---------------------------------------------------------------------
+
+function getTemplate(templateID) {
+    let template = document.getElementById(templateID);
+    template = document.importNode(template.content, true);
+    return template;
+}
+
+function addToContainer(node) {
+    document.getElementById("container").appendChild(node);
+}
+
+function clearContainer() {
+    let container = document.getElementById("taskContainer");
+    //var container = document.getElementById("myDIV");
+    if (container.style.display === "none") {
+        container.style.display = "block";
+    } else {
+        container.style.display = "none";
+    }
+   
+   
+   
+    /* while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }*/
+}
+
+function log(...messages) {
+    if (DEBUG) {
+        messages.forEach(msg => {
+            console.log(msg);
+        })
+    }
+}
+
+
+//--------Main app----------------------------------------------------
+
+
+function displayWelcome() {
+
+    clearContainer();
+       //  window.location = 'main.html';
+    
+      
+         localStorage.setItem('Token', JSON.stringify(authenticationToken))
+         let createTaskForm =  getTemplate("createTaskTemplate");
+         document.getElementById("container").appendChild(createTaskForm);
+ 
+         let form = document.getElementById("submitTask");
+         form.onclick = function (evt) {
+         
+            
+             // Stops the form from submitting
+             evt.preventDefault();
+            
+         //Putting the content and a user id in the database-----------------------------
+             let inputText = document.getElementById("innhold").value;
+         
+         
+             fetch('/app/lists', {
+                 method: "POST",
+                 body: JSON.stringify({
+                 inputText,
+                 user:authenticatedUser,
+                 token:authenticationToken
+                     
+                 }),
+                 headers: {
+                     "Content-Type": "application/json; charset=utf-8"
+                 },
+         
+             }).then(function (data) {
+                 if (data.status < 400) {
+                     document.getElementById("innhold").value = "";
+                     console.log(data);
+                     return data.json();
+                    
+         
+                 }
+         
+             }).catch(err => {
+                 console.error(err);
+             });
+         
+         }
+ 
+
+
+}
+
+
+function modal(){
+    
+   
+    clearContainer();
+    
+    localStorage.setItem('Token', JSON.stringify(authenticationToken))
+    let createTaskForm =  getTemplate("modal");
+    document.getElementById("taskContainer").appendChild(createTaskForm);
+
+
+            let form = document.getElementById("modalBtn");
+            form.onclick = function (evt) {
+                modal.style.display = "none";
+               
+                // Stops the form from submitting
+                evt.preventDefault();
+                
+            //Putting the content and a user id in the database-----------------------------
+                let inputText = document.getElementById("task").value;
+            if(inputText.length == 0){
+                inputText.value = "";
+                document.getElementById("task").placeholder = "Tomt. Prøv igjen";
+
+            }else{
+                fetch('/app/lists', {
+                    method: "POST",
+                    body: JSON.stringify({
+                    inputText,
+                    user:authenticatedUser,
+                    token:authenticationToken
+                        
+                    }),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+            
+                }).then(function (data) {
+                    if (data.status < 400) {
+                        document.getElementById("task").value = "";
+                        console.log(data);
+                        fetchData();
+                       
+                        return data.json();
+                        
+                    }
+            
+                }).catch(err => {
+                    console.error(err);
+                });
+
+
+
+            }
+            
+              
+            
+            }
+
+
+    
+
+// Modal functions-------------------------
+
+            var modal = document.getElementById('myModal');
+
+            // Get the button that opens the modal
+            var btn = document.getElementById("myBtn");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks the button, open the modal 
+            btn.onclick = function () {
+                modal.style.display = "block";
+
+            }
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+}
+
+
+//Enter key for button
+/*
 var input = document.getElementById("task");
 input.addEventListener("keyup", function (event) {
     event.preventDefault();
     if (event.keyCode === 13) {
         document.getElementById("modalBtn").click();
     }
-});
-function show() {
-    console.log("hey");
-    let todos = get_todos();
-
-    let time = '<p id="timer_value">';
-    let html = '<ul class="list">';
-    let button = '<button class="editBttn"></button>';
-
-    for (var i = 0; i < todos.length; i++) {
-        html += '<li  id="' + i + '">' + todos[i] + button + time;
-        console.log("kjører")
-
-
-    };
-
-    html += '</ul>';
-    document.getElementById('todos').innerHTML = html;
-    console.log(i)
-
-
-    var button_delete = document.getElementsByClassName('remove');
-    for (var i = 0; i < button_delete.length; i++) {
-        button_delete[i].addEventListener('click', remove);
-
-
-
-    };
-
-    /*var button_modal = document.getElementsByClassName('editBttn');
-     for (var i = 0; i < button_modal.length; i++) {
-     button_modal[i].addEventListener('click', listModal);
-     }*/
-
-    var editModal = document.getElementsByClassName('editBttn');
-    for (var i = 0; i < editModal.length; i++) {
-        // localStorage.clear(todos);
-        editModal[i].addEventListener('click', editBtn.onclick = function () {
-            editmodal.style.display = "block";
-        });
-    }
-
-};
-
-
-
-console.log(todos);
-let list = document.getElementById("todos");
-
-list.onclick = function () {
-
-    var id = this.getAttribute('id');
-    var element = todos.slice(0);
-    console.log(event.target)
+});*/
 
 }
 
 
 
-document.getElementById('modalBtn').addEventListener('click', add);
-document.getElementById('checkModalBtn').addEventListener('click', check);
-show();
-
-
-//Deadline function
-
+//Deadline function--------------------------------
 function settimer() {
 
     clearInterval(timer);
@@ -283,3 +346,119 @@ function settimer() {
     }
     timer = setInterval(showtimer, 1000000); // Display Timer In Every 1 Sec
 }
+
+
+//Fetch list from DB----------------------------
+
+function fetchData(){
+
+
+
+let data = JSON.stringify({
+	token: authenticationToken,
+	user: authenticatedUser
+});
+
+
+
+
+fetch('/app/lists/load/', {
+	method: 'POST',
+	headers: {
+		"Content-Type": "application/json; charset=utf-8",
+    "Authorization": authenticatedUser
+	},
+	body: data
+}).then(response => {
+	if (response.status < 400) {
+    console.log("loading")
+        loadLists(response);
+	} else {
+		// TODO: MESSAGE
+		console.log('Did not load presentation :(');
+	}
+}).catch(err => console.error(err));
+
+
+}
+
+
+
+
+
+async function loadLists(respons){
+    let data = await respons.json();
+    //let listJSON = data[0].
+    console.log(data);
+   // content = document.getElementById("container");
+    //content.innerHTML = data[0].listcontent;
+    let view = document.createElement("div");
+let listForDisplay = "";//view;
+   
+    //let postC = ["hello", "world"]
+    for (let i = 0; i < data.length; i++) {
+        
+        //let postCd = data[i].listcontent;
+        let postCd = data[i].listcontent;
+        let postF = data[i].frist;
+        let postlistId = data[i].listid;
+
+        let div = document.createElement("div");
+        div.id = "lists";
+
+
+        let DBlist = `
+        <div id="${i}">
+        <ul>
+        <li>To Remember: ${postCd} 
+        Deadline: ${postF} <button id="deleteBtn" onclick="deleteListElement(${postlistId})")>delete</button></li>
+        </ul>
+        </div>`;
+        
+        div.innerHTML = DBlist;
+        div.id = i;
+       // view.appendChild(div);
+       
+        listForDisplay += DBlist;
+       // document.getElementById("container").innerHTML += div;
+
+    }
+
+//document.getElementById("container").innerHTML = div;
+//let display = document.getElementById("container");
+document.getElementById("todocontainer").innerHTML = listForDisplay;
+
+}
+
+function deleteListElement(listvalue){
+    
+    let data = JSON.stringify({
+        
+        listid : listvalue
+        
+    });
+    
+    fetch('/app/lists', {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+        "Authorization": authenticatedUser,
+        "Listid": listvalue 
+        },
+        body: data
+    }).then(response => {
+        if (response.status < 400) {
+        console.log("loading")
+        fetchData();
+            
+        } else {
+            // TODO: MESSAGE
+            console.log('Did not load presentation :(');
+        }
+    }).catch(err => console.error(err));
+
+    
+            }
+
+
+            
