@@ -22,11 +22,12 @@ router.post('/app/lists', async function(req,res,next){
     console.log("Request ----------------------------------------------");
   
     let listContent = req.body.inputText;
+    let deadLine = req.body.inputDate;
     let  authenticatedUser = req.body.user.id;
     
 
-    let query = `INSERT INTO "public"."lists"("listcontent", "userid") 
-        VALUES('${listContent}', '${authenticatedUser}') RETURNING "listid","listcontent", "userid"`;
+    let query = `INSERT INTO "public"."lists"("listcontent", "userid", "frist") 
+        VALUES('${listContent}', '${authenticatedUser}', '${deadLine}') RETURNING "listid","listcontent", "userid", "frist"`;
 
     let code = await db.insert(query) ? 200:500;
     res.status(code).json({}).end()

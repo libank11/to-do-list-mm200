@@ -221,7 +221,7 @@ function modal() {
         let inputYear = document.getElementById("year").value;
         let inputHour = document.getElementById("hour").value;
         let inputMin = document.getElementById("min").value;
-        var inputDate = inputMonth + " " + inputDay + " " + inputYear + " " + inputHour + " " + inputMin;
+        var inputDate = inputMonth + " " + inputDay + "." + inputYear + "." + inputHour + "." + inputMin;
         settimer();
         console.log(inputDate)
 
@@ -233,6 +233,7 @@ function modal() {
             fetch('/app/lists', {
                 method: "POST",
                 body: JSON.stringify({
+                    inputDate,
                     inputText,
                     user: authenticatedUser,
                     token: authenticationToken
@@ -355,7 +356,7 @@ function settimer() {
             document.getElementById("timer_value").innerHTML = '1 day left';
         }
     }
-    timer = setInterval(showtimer, 1000); // Display Timer In Every 1 Sec
+    //timer = setInterval(showtimer, 1000); // Display Timer In Every 1 Sec
 }
 
 
@@ -423,7 +424,7 @@ async function loadLists(respons) {
         
         <div id="${i}">
         <ul>
-        <li>To Remember: ${postCd} 
+        <li onmouseover="settimer()"  border="0"  width="32" height="32" >To Remember: ${postCd} 
         Deadline: ${postF} <button id="deleteBtn" onclick="deleteListElement(${postlistId})")>delete</button></li>
         </ul>
         </div>
