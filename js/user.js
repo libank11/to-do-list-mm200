@@ -46,28 +46,39 @@ router.get('/app/user/:userName', async function(req,res,next){
     let userName = req.params["userName"];
 
     let query = `Select * from "public"."user" where userName='${userName}' 
-    and hash='${paswordHash}'`;
+    and hash='${paswordHash}' RETURNING "id", "email", "username", "hash"`;
 
     let user = await db.select(query) ;
 
     if(user){
         res.status(200).json(user).end()
         console.log(query)
-        console.log("hey")
+        
     } else{
         res.status(401).json({}).end();
     }
 })
 
 
-router.post('/app/user', async function(req,res,next){
+router.post('/app/user/load', async function(req,res,next){
 
 
+    console.log("Request ----------------------------------------------");
+    console.dir(req.body);
+    console.log("Request ----------------------------------------------");
+  
+  
+    let  authenticatedUser = req.body.user.id;
+    //let userName = req.params.user.id;
+    
 
+    let query = `Select * from "public"."user" where userName='${userName}' 
+    and hash='${paswordHash}' RETURNING "id", "email", "username", "hash"`;
 
-
-
-
+    let code = await db.insert(query);
+    let status = code ? 200 : 500;
+    res.status(status).json(code).end()
+    
 })
 
 

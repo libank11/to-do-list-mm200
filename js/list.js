@@ -57,7 +57,7 @@ router.post('/app/lists/load', async function(req,res,next){
 
 
 
-router.get('/app/lists/load/:userid', async function(req,res,next){
+/*router.get('/app/lists/load/:userid', async function(req,res,next){
 
     
 
@@ -74,7 +74,7 @@ router.get('/app/lists/load/:userid', async function(req,res,next){
     } else{
         res.status(401).json({}).end();
     }
-})
+})*/
 
 /*router.get('/app/lists/:userid', async function(req,res,next){
 

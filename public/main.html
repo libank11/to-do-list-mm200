@@ -12,7 +12,10 @@
   </style>
 </head>
 <body>
+  <div id="header">
+    
 
+  </div>
 <br>
 <br>
 <br>
@@ -27,6 +30,20 @@
     
 
 </div>
+
+<div id="accountContainer"  hidden>
+    
+  <h3></h3>
+ 
+  <input type="text">
+  
+  <input placeholder="ny passord" type="text">
+
+</div>
+
+
+
+
 
 <!--login template------------------------------>
 <template id="loginView">
@@ -64,18 +81,6 @@
 </div>
 </template>
 
-<template id="createTaskTemplate">
-        
-  <form id="createTaskForm">
-      
-
-      <label for="description"></label> 
-      <input type="text" id="innhold"><br>
-      
-      <button type="button" id="submitTask">Submit</button>
-  </form>
-</template>
-
 <div id="errorView" class="card error" hidden>
     <div class="section">
         <h1>Error</h1>
@@ -85,13 +90,34 @@
     </div>
 </div>
 
+
+<!--My Account template------------------------------>
+
+<template id="accountTemplate">
+
+
+<p></p>
+
+</template>
+
+
 <!--Main Modal------------------------------>
+<template id="headerTemplate">
+
+
+  <ul class="header">
+    <li id="logout"><a class="active" href="./main.html">Logout</a></li>
+    <li><button id="accountBtn">My Account</button></li>
+    
+  
+  </ul>
+
+
+</template>
+
 
 
 <template id="modal">
-
-
-
 
 <div id="content">
   <!-- Trigger/Open The Modal -->

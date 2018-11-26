@@ -51,6 +51,7 @@ function authenticateUser(username, password) {
 
 
         modal();
+        headerFunction();
         fetchData();
         var x = document.getElementById("container");
         if (x.style.display === "none") {
@@ -87,6 +88,8 @@ function displayLogin() {
     }
     addToContainer(loginView);
 }
+
+
 
 
 
@@ -194,7 +197,76 @@ function displayWelcome() {
 
 }
 
+function headerFunction() {
+    let createHeader = getTemplate("headerTemplate");
+    document.getElementById("header").appendChild(createHeader);
+    let acc = document.getElementById("accountBtn")
+     
+    acc.onclick = function(evt){
+        evt.preventDefault();
+      displayAccount();
 
+    }
+    
+    
+}
+
+function fetchUser() {
+
+
+
+    let data = JSON.stringify({
+        token: authenticationToken,
+        user: authenticatedUser
+    });
+
+
+
+
+    fetch('/app/user/load/', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": authenticatedUser
+        },
+        body: data
+    }).then(respons => {
+        if (respons.status < 400) {
+            console.log("loading")
+            loadLists(respons);
+           // displayAccount(response);
+
+           // settimer(response);
+        } else {
+            // TODO: MESSAGE
+            console.log('Did not load Database');
+        }
+    }).catch(err => console.error(err));
+
+
+}
+
+
+function displayAccount(respons){
+    clearContainer();
+   
+    let accountForm = getTemplate("accountTemplate");
+    document.getElementById("accountContainer").appendChild(accountForm);
+    console.log("account")
+
+
+    let accountView = document.getElementById("accountContainer");
+    accountView.removeAttribute("hidden");
+    accountEdit(respons);
+}
+
+
+async function accountEdit(){
+
+   
+
+
+}
 function modal() {
 
 
@@ -221,7 +293,7 @@ function modal() {
         let inputYear = document.getElementById("year").value;
         let inputHour = document.getElementById("hour").value;
         let inputMin = document.getElementById("min").value;
-        var inputDate = inputMonth + " " + inputDay + "." + inputYear + "." + inputHour + "." + inputMin;
+        var inputDate = inputMonth + "." + inputDay + "." + inputYear + "." + inputHour + "." + inputMin;
         settimer();
         console.log(inputDate)
 
@@ -309,55 +381,7 @@ function modal() {
 
 }
 
-var timer;
 
-//Deadline function--------------------------------
-function settimer() {
-
-    //clearInterval(timer);
-
-    var timer_month = document.getElementById("month").value;
-    var timer_day = document.getElementById("day").value;
-    var timer_year = document.getElementById("year").value;
-    var timer_hour = document.getElementById("hour").value;
-    if (timer_hour == "") timer_hour = 0;
-    var timer_min = document.getElementById("min").value;
-
-
-    var timer_date = timer_month + "/" + timer_day + "/" + timer_year + " " + timer_hour + ":" + timer_min;
-
-
-    var end = new Date(timer_date); // Arrange values in Date Time Format
-
-    var second = 1000;
-    var minute = second * 60;
-    var hour = minute * 60;
-    var day = hour * 24;
-
-    function showtimer() {
-        var now = new Date(); // Get Current date time
-        var remain = end - now; // Get The Difference Between Current and entered date time
-        console.log(timer_date);
-
-        if (remain < 0) {
-            clearInterval(timer);
-            document.getElementById("timer_value").innerHTML = 'Deadline Now!';
-            return;
-        }
-
-        var days = Math.floor(remain / day);
-        var hours = Math.floor((remain % day) / hour);
-        var minutes = Math.floor((remain % hour) / minute);
-        var seconds = Math.floor((remain % minute) / second);
-
-        document.getElementById("timer_value").innerHTML = days + 'Days ';
-
-        if (days < 1) {
-            document.getElementById("timer_value").innerHTML = '1 day left';
-        }
-    }
-    //timer = setInterval(showtimer, 1000); // Display Timer In Every 1 Sec
-}
 
 
 //Fetch list from DB----------------------------
@@ -385,9 +409,12 @@ function fetchData() {
         if (response.status < 400) {
             console.log("loading")
             loadLists(response);
+           // displayAccount(response);
+
+           // settimer(response);
         } else {
             // TODO: MESSAGE
-            console.log('Did not load presentation :(');
+            console.log('Did not load Database');
         }
     }).catch(err => console.error(err));
 
@@ -419,17 +446,21 @@ async function loadLists(respons) {
         div.class = "dropdown"
         div.id = "lists";
 
-
+       // console.log(postF)
         let DBlist = `
         
         <div id="${i}">
+        
         <ul>
-        <li onmouseover="settimer()"  border="0"  width="32" height="32" >To Remember: ${postCd} 
-        Deadline: ${postF} <button id="deleteBtn" onclick="deleteListElement(${postlistId})")>delete</button></li>
+        
+        <li  class="tooltip"  onmouseover=  >To Remember: ${postCd} Deadline: ${postF} <button id="deleteBtn" onclick="deleteListElement(${postlistId})")>delete</button>
+        <span class="tooltiptext" ></span>
+        </li>
         </ul>
+        
         </div>
         <div class="dropdown">
-        <button class="dropbtn">Dropdown</button>
+        <button class="dropbtn">Info</button>
         <div class="dropdown-content">
         <p id="timer_value"></p>
         </div>
@@ -479,5 +510,64 @@ function deleteListElement(listvalue) {
 
 
 }
+
+
+
+
+//Deadline function--------------------------------
+
+//var timer;
+/*async function settimer(respons) {
+
+    //clearInterval(timer);
+    let data = await respons.json();
+
+console.log(data)
+
+    
+    var timer_month = document.getElementById("month").value;
+    var timer_day = document.getElementById("day").value;
+    var timer_year = document.getElementById("year").value;
+    var timer_hour = document.getElementById("hour").value;
+    if (timer_hour == "") timer_hour = 0;
+    var timer_min = document.getElementById("min").value;
+
+
+    var timer_date = timer_month + "/" + timer_day + "/" + timer_year + " " + timer_hour + ":" + timer_min;
+
+
+    //var end = new Date(timer_date); // Arrange values in Date Time Format
+
+    var second = 1000;
+    var minute = second * 60;
+    var hour = minute * 60;
+    var day = hour * 24;
+
+    function showtimer() {
+        var now = new Date(); // Get Current date time
+        let time = document.getElementById(elmID).innerHTML;
+        var remain = time - now; // Get The Difference Between Current and entered date time
+        console.log(timer_date);
+
+
+        if (remain < 0) {
+            clearInterval(timer);
+            document.getElementById(elmID).innerHTML = 'Deadline Now!';
+            return;
+        }
+
+        var days = Math.floor(remain / day);
+        var hours = Math.floor((remain % day) / hour);
+        var minutes = Math.floor((remain % hour) / minute);
+        var seconds = Math.floor((remain % minute) / second);
+
+        document.getElementById(elmID).innerHTML = days + 'Days ';
+
+        if (days < 1) {
+            document.getElementById("elmID").innerHTML = '1 day left';
+        }
+    }
+   // timer = setInterval(showtimer, 1000); // Display Timer In Every 1 Sec
+}*/
 
 
