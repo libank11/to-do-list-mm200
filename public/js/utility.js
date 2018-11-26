@@ -25,6 +25,18 @@ function clearContainer() {
         container.removeChild(container.firstChild);
     }*/
 }
+/*
+function clearAccContainer() {
+    
+    
+    let accContainer = document.getElementById("accountContainer")
+    while (accContainer.firstChild) {
+        accContainer.removeChild(accContainer.firstChild);
+        accContainer.style.display = "none";
+    }
+    
+
+}*/
 
 
 
@@ -35,7 +47,7 @@ let listView = document.getElementById("listView")
         listView.style.display = "none";
     }
 
-    let listheader = document.getElementById("listHeader")
+   let listheader = document.getElementById("listHeader")
     while (listheader.firstChild) {
         listheader.removeChild(listheader.firstChild);
         listheader.style.display = "none";

@@ -49,59 +49,7 @@ function hideError() {
 
 //--------Main app----------------------------------------------------
 
-/*
-function displayWelcome() {
 
-    clearContainer();
-    //  window.location = 'main.html';
-
-
-    localStorage.setItem('Token', JSON.stringify(authenticationToken))
-    let createTaskForm = getTemplate("createTaskTemplate");
-    document.getElementById("container").appendChild(createTaskForm);
-
-    let form = document.getElementById("submitTask");
-    form.onclick = function (evt) {
-
-
-        // Stops the form from submitting
-        evt.preventDefault();
-
-        //Putting the content and a user id in the database-----------------------------
-        let inputText = document.getElementById("innhold").value;
-
-
-        fetch('/app/lists', {
-            method: "POST",
-            body: JSON.stringify({
-                inputText,
-                user: authenticatedUser,
-                token: authenticationToken
-
-            }),
-            headers: {
-                "Content-Type": "application/json; charset=utf-8"
-            },
-
-        }).then(function (data) {
-            if (data.status < 400) {
-                document.getElementById("innhold").value = "";
-                console.log(data);
-                return data.json();
-
-
-            }
-
-        }).catch(err => {
-            console.error(err);
-        });
-
-    }
-
-
-
-}
-*/
 function headerFunction() {
     let createHeader = getTemplate("headerTemplate");
     document.getElementById("header").appendChild(createHeader);
@@ -109,32 +57,42 @@ function headerFunction() {
     let myList = document.getElementById("myListBtn")
     acc.onclick = function (evt) {
         evt.preventDefault();
-        clearContainer();
+        clearList();
+        //clearContainer();
         displayAccount();
         
-        clearList();
+        
 
         let x = document.getElementById("listHeader");
         let y = document.getElementById("listView");
-        let z = document.getElementById("taskContainer");
+       let z = document.getElementById("accountContainer");
+       let c = document.getElementById("taskContainer");
+
+        
+      
         x.style.display = "none"
         y.style.display = "none"
-        z.style.display = "none"
+      z.style.display = "block"
+      c.style.display = "none"
     }
 
 
     myList.onclick = function (evt) {
             evt.preventDefault();
-            clearContainer();
+           //clearContainer();
             displayLists();
-            
-            clearList();
+            //clearAccContainer();
+            //clearList();
 
-            let x = document.getElementById("accountContainer");
-            let z = document.getElementById("listHeader");
             
-            x.style.display = "none"
-            z.style.display = "block"
+            let x = document.getElementById("listHeader");
+            let y = document.getElementById("listView");
+            let z = document.getElementById("accountContainer");
+          
+            x.style.display = "block"
+            y.style.display = "block"
+          z.style.display = "none"
+   
            
         }
 
@@ -178,7 +136,7 @@ function fetchUser() {
 //Account settings----------------------
 
 function displayAccount(respons) {
-    clearContainer();
+    //clearContainer();
 
     let accountForm = getTemplate("accountTemplate");
     document.getElementById("accountContainer").appendChild(accountForm);
@@ -287,7 +245,7 @@ console.log(activeListid);
         let inputYear = document.getElementById("year").value;
         let inputHour = document.getElementById("hour").value;
         let inputMin = document.getElementById("min").value;
-        var inputDate = inputMonth + "" + inputDay + "" + inputYear + "" + inputHour + "" + inputMin;
+        var inputDate = inputMonth + "-" + inputDay + "-" + inputYear + "-" + inputHour + "-" + inputMin;
         // settimer();
         console.log(inputDate)
       
@@ -438,7 +396,7 @@ async function loadLists(response) {
 
         let DBlists =
 
-            `<div onclick ="clearList(); modal(), fetchPosts(${listid}) "class="listBox">
+            `<div onclick ="clearList(); modal(), fetchPosts(${listid}) "id="listBox">
         
        <h1> ${listT}</h1>
        <p> ${listB}</p>
@@ -448,9 +406,11 @@ async function loadLists(response) {
         </div>`;
 
         listsForDisplay += DBlists;
+        
     }
 
     document.getElementById("listView").innerHTML = listsForDisplay;
+    document.getElementById("listView").style.cursor = "pointer";
 } 
 
 
