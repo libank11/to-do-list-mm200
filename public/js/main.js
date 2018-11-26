@@ -12,78 +12,6 @@ var authenticatedUser = null;
     
 })()
 
-// Ask the server to verify that there is a user with the given username and password registerd.
-function authenticateUser(username, password) {
-    console.log("Starting authentication request", `Username ${username}`, `Password ${password}`);
-
-    // We are going to base our authentication on basic authentication. This is a authentication scheme suported by http (RFC 7617)
-
-
-    let credentials = `Basic ${btoa(username + ":" + password)}`; // This creates a string that looks similar to  "Basic KL9zxHppU2VCX". btoa is a function of the window object.
-
-    let request = {
-        method: "GET",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': credentials
-        }
-    }
-
-    fetch("/app/authenticate", request).then(function (respons) {
-        if (respons.status < 400) {
-            console.log("bruker er logget inn");
-            // OK we are authenticated.
-            return respons.json(); // Grab the JSON payload. 
-
-        } else if (respons.status === 401) {
-            // Username or password was wrong, informe the user.
-            return Promise.reject(new Error("Wrong username or password"));
-        } else {
-            // Some other thing went wrong.
-            return Promise.reject(new Error("Could not log you in at this time, try again later"));
-        }
-    }).then(function (responsJSON) {
-
-        authenticationToken = responsJSON.auth; // Because this is where the server puts the token.
-        authenticatedUser = responsJSON.user; // Information about the user. 
-
-        console.log(authenticationToken);
-        console.log(authenticatedUser);
-
-
-        //modal();
-        headerFunction();
-        displayLists();
-        
-        var x = document.getElementById("container");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
-        }
-        var listHeader = document.getElementById("listHeader");
-        if (listHeader.style.display === "none") {
-            listHeader.style.display = "block";
-        } else {
-            listHeader.style.display = "none";
-        }
-
-        clearContainer()
-
-
-
-
-    }).catch(function (err) {
-        // fetch could not complete the request.
-        displayError(err.message);
-    });
-
-}
-
-
-
-
 // View code ----------------------------------------------------------------------------------
 // Moste things after this point is just UI code and not important for the discussion.
 
@@ -115,63 +43,6 @@ function displayError(msg) {
 function hideError() {
     let errView = document.getElementById("errorView");
     errView.setAttribute("hidden", true);
-}
-
-// Utility functions ---------------------------------------------------------------------
-
-function getTemplate(templateID) {
-    let template = document.getElementById(templateID);
-    template = document.importNode(template.content, true);
-    return template;
-}
-
-function addToContainer(node) {
-    document.getElementById("container").appendChild(node);
-}
-
-function clearContainer() {
-    
-    
-    let taskContainer = document.getElementById("taskContainer")
-    while (taskContainer.firstChild) {
-        taskContainer.removeChild(taskContainer.firstChild);
-        taskContainer.style.display = "none";
-    }
-    
-    
-
-
-
-    /* while (container.firstChild) {
-        container.removeChild(container.firstChild);
-    }*/
-}
-
-
-
-function clearList(){
-let listView = document.getElementById("listView")
-    while (listView.firstChild) {
-        listView.removeChild(listView.firstChild);
-        listView.style.display = "none";
-    }
-
-    let listheader = document.getElementById("listHeader")
-    while (listheader.firstChild) {
-        listheader.removeChild(listheader.firstChild);
-        listheader.style.display = "none";
-    }
-
-  
-
-}
-
-function log(...messages) {
-    if (DEBUG) {
-        messages.forEach(msg => {
-            console.log(msg);
-        })
-    }
 }
 
 
@@ -362,7 +233,8 @@ function displayLists() {
                     inputTittel,
                     inputBeskrivelse,
                     user: authenticatedUser,
-                    token: authenticationToken
+                    token: authenticationToken,
+                    listid:listid
 
                 }),
                 headers: {
@@ -572,7 +444,7 @@ async function loadLists(response) {
     }
 
     document.getElementById("listView").innerHTML = listsForDisplay;
-}
+} 
 
 
 
@@ -667,94 +539,3 @@ async function loadPosts(response) {
     document.getElementById("todocontainer").innerHTML = listForDisplay;
 
 }
-
-function deleteListElement(postvalue) {
-
-    let data = JSON.stringify({
-
-        postid: postvalue
-
-    });
-
-    fetch('/app/posts', {
-        method: 'DELETE',
-        headers: {
-            "Content-Type": "application/json; charset=utf-8",
-            "Authorization": authenticatedUser,
-            "postid": postvalue
-        },
-        body: data
-    }).then(response => {
-        if (response.status < 400) {
-            console.log("loading")
-            fetchPosts();
-
-        } else {
-            // TODO: MESSAGE
-            console.log('Did not load presentation :(');
-        }
-    }).catch(err => console.error(err));
-
-
-}
-
-
-
-
-//Deadline function--------------------------------
-
-//var timer;
-/*async function settimer(respons) {
-
-    //clearInterval(timer);
-    let data = await respons.json();
-
-console.log(data)
-
-    
-    var timer_month = document.getElementById("month").value;
-    var timer_day = document.getElementById("day").value;
-    var timer_year = document.getElementById("year").value;
-    var timer_hour = document.getElementById("hour").value;
-    if (timer_hour == "") timer_hour = 0;
-    var timer_min = document.getElementById("min").value;
-
-
-    var timer_date = timer_month + "/" + timer_day + "/" + timer_year + " " + timer_hour + ":" + timer_min;
-
-
-    //var end = new Date(timer_date); // Arrange values in Date Time Format
-
-    var second = 1000;
-    var minute = second * 60;
-    var hour = minute * 60;
-    var day = hour * 24;
-
-    function showtimer() {
-        var now = new Date(); // Get Current date time
-        let time = document.getElementById(elmID).innerHTML;
-        var remain = time - now; // Get The Difference Between Current and entered date time
-        console.log(timer_date);
-
-
-        if (remain < 0) {
-            clearInterval(timer);
-            document.getElementById(elmID).innerHTML = 'Deadline Now!';
-            return;
-        }
-
-        var days = Math.floor(remain / day);
-        var hours = Math.floor((remain % day) / hour);
-        var minutes = Math.floor((remain % hour) / minute);
-        var seconds = Math.floor((remain % minute) / second);
-
-        document.getElementById(elmID).innerHTML = days + 'Days ';
-
-        if (days < 1) {
-            document.getElementById("elmID").innerHTML = '1 day left';
-        }
-    }
-   // timer = setInterval(showtimer, 1000); // Display Timer In Every 1 Sec
-}*/
-
-

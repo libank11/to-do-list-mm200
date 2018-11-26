@@ -25,6 +25,7 @@ router.post('/app/lists', async function(req,res,next){
     let  authenticatedUser = req.body.user.id;
     let listTittel = req.body.inputTittel;
     let listBeskrivelse = req.body.inputBeskrivelse;
+
     
 
     let query = `INSERT INTO "public"."lists"("listtittel", "userid", "beskrivelse") 
@@ -47,8 +48,8 @@ router.post('/app/posts', async function(req,res,next){
     let  authenticatedUser = req.body.user.id;
     
 
-    let query = `INSERT INTO "public"."posts"("postcontent", "userid", "dato") 
-        VALUES('${postcontent}', '${authenticatedUser}', '${dato}') RETURNING "postid","postcontent", "userid", "dato"`;
+    let query = `INSERT INTO "public"."posts"("postcontent", "userid", "dato", "listid") 
+        VALUES('${postcontent}', '${authenticatedUser}', '${dato}') RETURNING "postid","postcontent", "userid", "dato", "listid"`;
 
     let code = await db.insert(query) ? 200:500;
     res.status(code).json({}).end()
