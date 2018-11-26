@@ -1,5 +1,6 @@
 function deleteListElement(postvalue) {
-
+    console.log(postvalue);
+    let listide = localStorage.getItem("listid");
     let data = JSON.stringify({
 
         postid: postvalue
@@ -17,7 +18,7 @@ function deleteListElement(postvalue) {
     }).then(response => {
         if (response.status < 400) {
             console.log("loading")
-            fetchPosts();
+            fetchPosts(listide);
 
         } else {
             // TODO: MESSAGE

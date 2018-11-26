@@ -38,7 +38,7 @@ router.post('/app/lists', async function(req,res,next){
 
 router.post('/app/posts', async function(req,res,next){
 
-
+// RETURNING "postid","postcontent", "userid", "dato", "listid"`;
     console.log("Request ----------------------------------------------");
     console.dir(req.body);
     console.log("Request ----------------------------------------------");
@@ -46,10 +46,11 @@ router.post('/app/posts', async function(req,res,next){
     let postcontent = req.body.inputText;
     let dato = req.body.inputDate;
     let  authenticatedUser = req.body.user.id;
+    let listid = req.body.listid.id;
     
 
     let query = `INSERT INTO "public"."posts"("postcontent", "userid", "dato", "listid") 
-        VALUES('${postcontent}', '${authenticatedUser}', '${dato}') RETURNING "postid","postcontent", "userid", "dato", "listid"`;
+        VALUES('${postcontent}', '${authenticatedUser}', '${dato}','${listid}')`; 
 
     let code = await db.insert(query) ? 200:500;
     res.status(code).json({}).end()
@@ -87,9 +88,10 @@ router.post('/app/posts/load', async function(req,res,next){
   
     let  authenticatedUser = req.body.user.id;
     //let userName = req.params.user.id;
+    let listid = req.body.listid
     
 
-    let query = `SELECT * from "public"."posts" WHERE "userid"='${authenticatedUser}'`;
+    let query = `SELECT * from "public"."posts" WHERE "listid"='${listid}'`;
 
     let code = await db.insert(query);
     let status = code ? 200 : 500;

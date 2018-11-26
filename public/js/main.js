@@ -1,6 +1,7 @@
 const DEBUG = true;
 var authenticationToken = null;
 var authenticatedUser = null;
+var activeListid;
 
 
 
@@ -48,7 +49,7 @@ function hideError() {
 
 //--------Main app----------------------------------------------------
 
-
+/*
 function displayWelcome() {
 
     clearContainer();
@@ -100,7 +101,7 @@ function displayWelcome() {
 
 
 }
-
+*/
 function headerFunction() {
     let createHeader = getTemplate("headerTemplate");
     document.getElementById("header").appendChild(createHeader);
@@ -233,8 +234,8 @@ function displayLists() {
                     inputTittel,
                     inputBeskrivelse,
                     user: authenticatedUser,
-                    token: authenticationToken,
-                    listid:listid
+                    token: authenticationToken
+                    
 
                 }),
                 headers: {
@@ -273,10 +274,10 @@ function modal() {
     let form = document.getElementById("modalBtn");
     form.onclick = function (evt) {
         modal.style.display = "none";
-
+console.log(activeListid);
         // Stops the form from submitting
         evt.preventDefault();
-
+       let activeListid1 = localStorage.getItem("listid")
         //Putting the content and a user id in the database-----------------------------
         let inputText = document.getElementById("task").value;
         //let inputTag = document.getElementById("tag").value;
@@ -286,9 +287,12 @@ function modal() {
         let inputYear = document.getElementById("year").value;
         let inputHour = document.getElementById("hour").value;
         let inputMin = document.getElementById("min").value;
-        var inputDate = inputMonth + "." + inputDay + "." + inputYear + "." + inputHour + "." + inputMin;
+        var inputDate = inputMonth + "" + inputDay + "" + inputYear + "" + inputHour + "" + inputMin;
         // settimer();
         console.log(inputDate)
+      
+       let activeListid12 = { id: activeListid1 }; 
+console.log(activeListid12);
 
         if (inputText.length == 0) {
             inputText.value = "";
@@ -302,7 +306,8 @@ function modal() {
                     inputText,
                     user: authenticatedUser,
                     token: authenticationToken,
-                 //   listid: listid
+                    listid: activeListid12
+                    
 
 
                 }),
@@ -314,8 +319,8 @@ function modal() {
                 if (data.status < 400) {
                     document.getElementById("task").value = "";
                     console.log(data);
-                    fetchPosts();
-
+                    fetchPosts(activeListid1);
+                   
                     return data.json();
 
                 }
@@ -387,7 +392,8 @@ function fetchLists() {
 
     let data = JSON.stringify({
         token: authenticationToken,
-        user: authenticatedUser
+        user: authenticatedUser,
+        //listid:listid
     });
 
 
@@ -425,13 +431,14 @@ async function loadLists(response) {
     for (var i = 0; i < data.length; i++) {
         let listT = data[i].listtittel;
         let listB = data[i].beskrivelse;
+        let listid = data[i].listid;
 
         container.style.display = "block";
 
 
         let DBlists =
 
-            `<div onclick ="clearList(); modal(), fetchPosts() "class="listBox">
+            `<div onclick ="clearList(); modal(), fetchPosts(${listid}) "class="listBox">
         
        <h1> ${listT}</h1>
        <p> ${listB}</p>
@@ -449,13 +456,18 @@ async function loadLists(response) {
 
 
 
-function fetchPosts() {
+function fetchPosts(elm) {
+  let listidArray = [elm]
+var activeListid = elm;
 
+localStorage.setItem("listid", elm);
 
-
+console.log(elm);
+//activeListid.valueOf();
     let data = JSON.stringify({
         token: authenticationToken,
-        user: authenticatedUser
+        user: authenticatedUser,
+        listid: elm
     });
 
 
@@ -465,7 +477,7 @@ function fetchPosts() {
         method: 'POST',
         headers: {
             "Content-Type": "application/json; charset=utf-8",
-            "Authorization": authenticatedUser
+            "Authorization": authenticatedUser,
         },
         body: data
     }).then(response => {
