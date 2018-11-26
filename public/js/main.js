@@ -8,6 +8,8 @@ var authenticatedUser = null;
 
 (function () {
     displayLogin();
+   
+    
 })()
 
 // Ask the server to verify that there is a user with the given username and password registerd.
@@ -50,15 +52,25 @@ function authenticateUser(username, password) {
         console.log(authenticatedUser);
 
 
-        modal();
+        //modal();
         headerFunction();
-        fetchData();
+        displayLists();
+        
         var x = document.getElementById("container");
         if (x.style.display === "none") {
             x.style.display = "block";
         } else {
             x.style.display = "none";
         }
+        var listHeader = document.getElementById("listHeader");
+        if (listHeader.style.display === "none") {
+            listHeader.style.display = "block";
+        } else {
+            listHeader.style.display = "none";
+        }
+
+        clearContainer()
+
 
 
 
@@ -118,19 +130,40 @@ function addToContainer(node) {
 }
 
 function clearContainer() {
-    let container = document.getElementById("taskContainer");
-    //var container = document.getElementById("myDIV");
-    if (container.style.display === "none") {
-        container.style.display = "block";
-    } else {
-        container.style.display = "none";
+    
+    
+    let taskContainer = document.getElementById("taskContainer")
+    while (taskContainer.firstChild) {
+        taskContainer.removeChild(taskContainer.firstChild);
+        taskContainer.style.display = "none";
     }
+    
+    
 
 
 
     /* while (container.firstChild) {
         container.removeChild(container.firstChild);
     }*/
+}
+
+
+
+function clearList(){
+let listView = document.getElementById("listView")
+    while (listView.firstChild) {
+        listView.removeChild(listView.firstChild);
+        listView.style.display = "none";
+    }
+
+    let listheader = document.getElementById("listHeader")
+    while (listheader.firstChild) {
+        listheader.removeChild(listheader.firstChild);
+        listheader.style.display = "none";
+    }
+
+  
+
 }
 
 function log(...messages) {
@@ -201,19 +234,42 @@ function headerFunction() {
     let createHeader = getTemplate("headerTemplate");
     document.getElementById("header").appendChild(createHeader);
     let acc = document.getElementById("accountBtn")
-     
-    acc.onclick = function(evt){
+    let myList = document.getElementById("myListBtn")
+    acc.onclick = function (evt) {
         evt.preventDefault();
-      displayAccount();
+        clearContainer();
+        displayAccount();
+        
+        clearList();
 
+        let x = document.getElementById("listHeader");
+        let y = document.getElementById("listView");
+        let z = document.getElementById("taskContainer");
+        x.style.display = "none"
+        y.style.display = "none"
+        z.style.display = "none"
     }
-    
-    
+
+
+    myList.onclick = function (evt) {
+            evt.preventDefault();
+            clearContainer();
+            displayLists();
+            
+            clearList();
+
+            let x = document.getElementById("accountContainer");
+            let z = document.getElementById("listHeader");
+            
+            x.style.display = "none"
+            z.style.display = "block"
+           
+        }
+
+
 }
 
 function fetchUser() {
-
-
 
     let data = JSON.stringify({
         token: authenticationToken,
@@ -234,9 +290,9 @@ function fetchUser() {
         if (respons.status < 400) {
             console.log("loading")
             loadLists(respons);
-           // displayAccount(response);
+            // displayAccount(response);
 
-           // settimer(response);
+            // settimer(response);
         } else {
             // TODO: MESSAGE
             console.log('Did not load Database');
@@ -247,9 +303,11 @@ function fetchUser() {
 }
 
 
-function displayAccount(respons){
+//Account settings----------------------
+
+function displayAccount(respons) {
     clearContainer();
-   
+
     let accountForm = getTemplate("accountTemplate");
     document.getElementById("accountContainer").appendChild(accountForm);
     console.log("account")
@@ -261,52 +319,48 @@ function displayAccount(respons){
 }
 
 
-async function accountEdit(){
+async function accountEdit() {
 
-   
+
 
 
 }
-function modal() {
 
 
+
+//Displaying lists-----------------
+function displayLists() {
     clearContainer();
+    fetchLists();
 
-    localStorage.setItem('Token', JSON.stringify(authenticationToken))
-    let createTaskForm = getTemplate("modal");
-    document.getElementById("taskContainer").appendChild(createTaskForm);
+    let createListsForm = getTemplate("listTemplate");
+    document.getElementById("listHeader").appendChild(createListsForm);
 
 
-    let form = document.getElementById("modalBtn");
+    let form = document.getElementById("listBtn");
     form.onclick = function (evt) {
-        modal.style.display = "none";
+        console.log("list")
 
         // Stops the form from submitting
         evt.preventDefault();
 
         //Putting the content and a user id in the database-----------------------------
-        let inputText = document.getElementById("task").value;
-        let inputTag = document.getElementById("tag").value;
-        //  let inputDate = document.getElementById("task").value;
-        let inputMonth = document.getElementById("month").value;
-        let inputDay = document.getElementById("day").value;
-        let inputYear = document.getElementById("year").value;
-        let inputHour = document.getElementById("hour").value;
-        let inputMin = document.getElementById("min").value;
-        var inputDate = inputMonth + "." + inputDay + "." + inputYear + "." + inputHour + "." + inputMin;
-        settimer();
-        console.log(inputDate)
 
-        if (inputText.length == 0) {
-            inputText.value = "";
-            document.getElementById("task").placeholder = "Tomt. Prøv igjen";
+        let inputTittel = document.getElementById("listTittel").value;
+        let inputBeskrivelse = document.getElementById("listBeskrivelse").value;
+
+
+        if (inputTittel.length && inputBeskrivelse.length == 0) {
+            inputBeskrivelse.value = "";
+            inputTittel.value = "";
+            document.getElementById("listTittel").placeholder = "Tomt. Prøv igjen";
 
         } else {
             fetch('/app/lists', {
                 method: "POST",
                 body: JSON.stringify({
-                    inputDate,
-                    inputText,
+                    inputTittel,
+                    inputBeskrivelse,
                     user: authenticatedUser,
                     token: authenticationToken
 
@@ -317,9 +371,78 @@ function modal() {
 
             }).then(function (data) {
                 if (data.status < 400) {
+                    //document.getElementById("task").value = "";
+                    console.log(data);
+                    //fetchData();
+                    fetchLists();
+                    return data.json();
+
+                }
+
+            }).catch(err => {
+                console.error(err);
+            });
+
+        }
+    }
+}
+
+
+function modal() {
+
+
+    //clearContainer();
+
+    // localStorage.setItem('Token', JSON.stringify(authenticationToken))
+    let createTaskForm = getTemplate("modal");
+    document.getElementById("taskContainer").appendChild(createTaskForm);
+    document.getElementById("taskContainer").style.display = "block";
+
+    let form = document.getElementById("modalBtn");
+    form.onclick = function (evt) {
+        modal.style.display = "none";
+
+        // Stops the form from submitting
+        evt.preventDefault();
+
+        //Putting the content and a user id in the database-----------------------------
+        let inputText = document.getElementById("task").value;
+        //let inputTag = document.getElementById("tag").value;
+        //  let inputDate = document.getElementById("task").value;
+        let inputMonth = document.getElementById("month").value;
+        let inputDay = document.getElementById("day").value;
+        let inputYear = document.getElementById("year").value;
+        let inputHour = document.getElementById("hour").value;
+        let inputMin = document.getElementById("min").value;
+        var inputDate = inputMonth + "." + inputDay + "." + inputYear + "." + inputHour + "." + inputMin;
+        // settimer();
+        console.log(inputDate)
+
+        if (inputText.length == 0) {
+            inputText.value = "";
+            document.getElementById("task").placeholder = "Tomt. Prøv igjen";
+
+        } else {
+            fetch('/app/posts', {
+                method: "POST",
+                body: JSON.stringify({
+                    inputDate,
+                    inputText,
+                    user: authenticatedUser,
+                    token: authenticationToken,
+                 //   listid: listid
+
+
+                }),
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+
+            }).then(function (data) {
+                if (data.status < 400) {
                     document.getElementById("task").value = "";
                     console.log(data);
-                    fetchData();
+                    fetchPosts();
 
                     return data.json();
 
@@ -370,23 +493,23 @@ function modal() {
 
 
     //Enter key for button
-    /*
+
     var input = document.getElementById("task");
     input.addEventListener("keyup", function (event) {
         event.preventDefault();
         if (event.keyCode === 13) {
             document.getElementById("modalBtn").click();
         }
-    });*/
+    });
 
 }
 
 
 
 
-//Fetch list from DB----------------------------
+//Fetch list and posts from DB----------------------------
 
-function fetchData() {
+function fetchLists() {
 
 
 
@@ -409,9 +532,75 @@ function fetchData() {
         if (response.status < 400) {
             console.log("loading")
             loadLists(response);
-           // displayAccount(response);
 
-           // settimer(response);
+        } else {
+            // TODO: MESSAGE
+            console.log('Did not load Database');
+        }
+    }).catch(err => console.error(err));
+
+
+}
+
+
+async function loadLists(response) {
+
+    let data = await response.json();
+    console.log(data);
+    var container = document.getElementById("listView");
+    let listsForDisplay = "";
+
+    for (var i = 0; i < data.length; i++) {
+        let listT = data[i].listtittel;
+        let listB = data[i].beskrivelse;
+
+        container.style.display = "block";
+
+
+        let DBlists =
+
+            `<div onclick ="clearList(); modal(), fetchPosts() "class="listBox">
+        
+       <h1> ${listT}</h1>
+       <p> ${listB}</p>
+        
+        
+        
+        </div>`;
+
+        listsForDisplay += DBlists;
+    }
+
+    document.getElementById("listView").innerHTML = listsForDisplay;
+}
+
+
+
+
+function fetchPosts() {
+
+
+
+    let data = JSON.stringify({
+        token: authenticationToken,
+        user: authenticatedUser
+    });
+
+
+
+
+    fetch('/app/posts/load/', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": authenticatedUser
+        },
+        body: data
+    }).then(response => {
+        if (response.status < 400) {
+            console.log("loading")
+            loadPosts(response);
+
         } else {
             // TODO: MESSAGE
             console.log('Did not load Database');
@@ -425,28 +614,26 @@ function fetchData() {
 
 
 
-async function loadLists(respons) {
-    let data = await respons.json();
-    //let listJSON = data[0].
+async function loadPosts(response) {
+    let data = await response.json();
+
     console.log(data);
-    // content = document.getElementById("container");
-    //content.innerHTML = data[0].listcontent;
+
     let view = document.createElement("div");
     let listForDisplay = "";//view;
 
-    //let postC = ["hello", "world"]
+
     for (let i = 0; i < data.length; i++) {
 
-        //let postCd = data[i].listcontent;
-        let postCd = data[i].listcontent;
-        let postF = data[i].frist;
-        let postlistId = data[i].listid;
+        let postCd = data[i].postcontent;
+        let postF = data[i].dato;
+        let postlistId = data[i].postid;
 
         let div = document.createElement("div");
         div.class = "dropdown"
         div.id = "lists";
 
-       // console.log(postF)
+
         let DBlist = `
         
         <div id="${i}">
@@ -481,26 +668,26 @@ async function loadLists(respons) {
 
 }
 
-function deleteListElement(listvalue) {
+function deleteListElement(postvalue) {
 
     let data = JSON.stringify({
 
-        listid: listvalue
+        postid: postvalue
 
     });
 
-    fetch('/app/lists', {
+    fetch('/app/posts', {
         method: 'DELETE',
         headers: {
             "Content-Type": "application/json; charset=utf-8",
             "Authorization": authenticatedUser,
-            "Listid": listvalue
+            "postid": postvalue
         },
         body: data
     }).then(response => {
         if (response.status < 400) {
             console.log("loading")
-            fetchData();
+            fetchPosts();
 
         } else {
             // TODO: MESSAGE

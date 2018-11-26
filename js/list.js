@@ -21,13 +21,34 @@ router.post('/app/lists', async function(req,res,next){
     console.dir(req.body);
     console.log("Request ----------------------------------------------");
   
-    let listContent = req.body.inputText;
-    let deadLine = req.body.inputDate;
+   
+    let  authenticatedUser = req.body.user.id;
+    let listTittel = req.body.inputTittel;
+    let listBeskrivelse = req.body.inputBeskrivelse;
+    
+
+    let query = `INSERT INTO "public"."lists"("listtittel", "userid", "beskrivelse") 
+        VALUES('${listTittel}', '${authenticatedUser}', '${listBeskrivelse}') RETURNING "listid","listtittel", "userid", "beskrivelse"`;
+
+    let code = await db.insert(query) ? 200:500;
+    res.status(code).json({}).end()
+})
+
+
+router.post('/app/posts', async function(req,res,next){
+
+
+    console.log("Request ----------------------------------------------");
+    console.dir(req.body);
+    console.log("Request ----------------------------------------------");
+  
+    let postcontent = req.body.inputText;
+    let dato = req.body.inputDate;
     let  authenticatedUser = req.body.user.id;
     
 
-    let query = `INSERT INTO "public"."lists"("listcontent", "userid", "frist") 
-        VALUES('${listContent}', '${authenticatedUser}', '${deadLine}') RETURNING "listid","listcontent", "userid", "frist"`;
+    let query = `INSERT INTO "public"."posts"("postcontent", "userid", "dato") 
+        VALUES('${postcontent}', '${authenticatedUser}', '${dato}') RETURNING "postid","postcontent", "userid", "dato"`;
 
     let code = await db.insert(query) ? 200:500;
     res.status(code).json({}).end()
@@ -54,6 +75,27 @@ router.post('/app/lists/load', async function(req,res,next){
     res.status(status).json(code).end()
     
 })
+
+router.post('/app/posts/load', async function(req,res,next){
+
+
+    console.log("Request ----------------------------------------------");
+    console.dir(req.body);
+    console.log("Request ----------------------------------------------");
+  
+  
+    let  authenticatedUser = req.body.user.id;
+    //let userName = req.params.user.id;
+    
+
+    let query = `SELECT * from "public"."posts" WHERE "userid"='${authenticatedUser}'`;
+
+    let code = await db.insert(query);
+    let status = code ? 200 : 500;
+    res.status(status).json(code).end()
+    
+})
+
 
 
 
@@ -112,6 +154,25 @@ router.delete('/app/lists/', async function(req, res) {
 
  
 });
+
+router.delete('/app/posts/', async function(req, res) {
+    
+    
+    //let userid = req.params.user.id;
+     let postid = req.body.postid
+
+ 
+
+     let queryDeleteListContent = `DELETE FROM "public"."posts" WHERE "postid" = '${postid}' RETURNING *`;
+     let deleted = await db.delete(queryDeleteListContent);
+     let status = deleted ? 200 : 500;
+         res.status(status).json({}).end();
+
+ 
+});
+
+
+
 router.delete('/app/lists/:userid', async function(req, res) {
     
     

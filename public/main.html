@@ -31,9 +31,20 @@
 
 </div>
 
+<div id="listHeader" style="display:none">
+    
+
+</div>
+
+<div id="listView" style="display: none">
+    
+
+</div>
+
+
 <div id="accountContainer"  hidden>
     
-  <h3></h3>
+  <h3>Endre Passord</h3>
  
   <input type="text">
   
@@ -101,6 +112,24 @@
 </template>
 
 
+<!--Listeview template------------------------------>
+
+<template id="listTemplate">
+
+  <h1>Lag ny liste</h1>
+  <form id="listForm">
+<input id="listTittel" placeholder="Tittel">
+<input id="listBeskrivelse" placeholder="Beskrivelse">
+
+<button id="listBtn">Submit</button>
+
+  </form>
+
+
+</template>
+
+
+
 <!--Main Modal------------------------------>
 <template id="headerTemplate">
 
@@ -108,6 +137,7 @@
   <ul class="header">
     <li id="logout"><a class="active" href="./main.html">Logout</a></li>
     <li><button id="accountBtn">My Account</button></li>
+    <li><button id="myListBtn">My Lists</button></li>
     
   
   </ul>
