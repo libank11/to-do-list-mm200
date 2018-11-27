@@ -56,6 +56,8 @@ function authenticateUser(username, password) {
             listHeader.style.display = "none";
         }
 
+        
+
         clearContainer()
 
 

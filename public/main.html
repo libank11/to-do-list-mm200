@@ -36,6 +36,8 @@
 
 </div>
 
+
+
 <div id="listView" style="display: none">
     
 
@@ -44,11 +46,11 @@
 
 <div id="accountContainer"  hidden>
     
-  <h3>Endre Passord</h3>
+  <h3>Endre Email</h3>
  
-  <input type="text">
   
-  <input placeholder="ny passord" type="text">
+  
+  <input placeholder="Ny Email" type="text">
 
 </div>
 
@@ -120,10 +122,25 @@
   <form id="listForm">
 <input id="listTittel" placeholder="Tittel">
 <input id="listBeskrivelse" placeholder="Beskrivelse">
+<select id = "privacy" style="
+font-size: 18px">
+  <option value="Public">Public</option>
+  <option value="Privat">Privat</option>
+</select>
 
 <button id="listBtn">Submit</button>
 
-  </form>
+</form>
+
+  <h1>Hvis Liste</h1>
+  <select id="pivacySel">
+  <option value="Public">Public</option>
+  <option value="Privat">Privat</option>
+  <option value="all" selected>All</option>
+</select>
+<button onclick="fetchLists()" id="privacyBtn">Show</button>
+
+  
 
 
 </template>
@@ -169,18 +186,12 @@
    <p align="center">Deadline</p>
    <div  class="dateInput">
     
-      <input type="text" id="month" placeholder="Month">
-      <input type="text" id="day" placeholder="Day">
-      <input type="text" id="year" placeholder="Year">
+      <input type="date" id="myDate">
     </div>
     <br>
     <div class="vl"></div>
     <br>
-      <div class="timeInput">
-    
-      <input type="text" id="hour" placeholder="Hour">
-      <input type="text" id="min" placeholder="Min">
-   </div>
+     
    <p align="center" style="
     margin-left: 101px;
 ">Tag</p>
@@ -204,8 +215,9 @@
 <script src="./js/utility.js"></script>
 <script src="./js/main.js"></script>
 <script src="./js/login.js"></script>
-<script src="./js/time.js"></script>
+
 <script src="./js/delete.js"></script>
+<script src="./js/update.js"></script>
 
 
 

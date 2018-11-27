@@ -25,11 +25,12 @@ router.post('/app/lists', async function(req,res,next){
     let  authenticatedUser = req.body.user.id;
     let listTittel = req.body.inputTittel;
     let listBeskrivelse = req.body.inputBeskrivelse;
+    let privacyValue = req.body.privacyValue;
 
     
 
-    let query = `INSERT INTO "public"."lists"("listtittel", "userid", "beskrivelse") 
-        VALUES('${listTittel}', '${authenticatedUser}', '${listBeskrivelse}') RETURNING "listid","listtittel", "userid", "beskrivelse"`;
+    let query = `INSERT INTO "public"."lists"("listtittel", "userid", "beskrivelse", "privacy") 
+        VALUES('${listTittel}', '${authenticatedUser}', '${listBeskrivelse}', '${privacyValue}') RETURNING "listid","listtittel", "userid", "beskrivelse"`;
 
     let code = await db.insert(query) ? 200:500;
     res.status(code).json({}).end()
@@ -86,7 +87,7 @@ router.post('/app/posts/load', async function(req,res,next){
     console.log("Request ----------------------------------------------");
   
   
-    let  authenticatedUser = req.body.user.id;
+    //let  authenticatedUser = req.body.user.id;
     //let userName = req.params.user.id;
     let listid = req.body.listid
     
@@ -102,7 +103,7 @@ router.post('/app/posts/load', async function(req,res,next){
 
 
 
-/*router.get('/app/lists/load/:userid', async function(req,res,next){
+router.get('/app/lists/load/:userid', async function(req,res,next){
 
     
 
@@ -119,7 +120,7 @@ router.post('/app/posts/load', async function(req,res,next){
     } else{
         res.status(401).json({}).end();
     }
-})*/
+})
 
 /*router.get('/app/lists/:userid', async function(req,res,next){
 
@@ -193,7 +194,41 @@ router.delete('/app/lists/:userid', async function(req, res) {
   });
 
 
+  router.post("/app/lists/update", async function(req,res,next){
 
+    let updateListId = req.body.listid;
+    let updateTittel = req.body.updateTittel;
+    let updateBeskrivelse = req.body.updateBeskrivelse;
+    console.log("server side receives")
+    
+    let query = `UPDATE lists SET listtittel = '${updateTittel}', beskrivelse = '${updateBeskrivelse}' WHERE listid = '${updateListId}'`;
+    
+    console.log(query);
+
+    let code = await db.update(query);
+    let status = code ? 200 : 500;
+    res.status(status).json(code).end()
+    
+});
+
+router.post("/app/posts/update", async function(req,res,next){
+
+    let updatePostId = req.body.updatePostId;
+    let oppdaterOverskrift = req.body.oppdaterOverskrift;
+    let oppdaterPostInnhold = req.body.oppdaterPostInnhold;
+
+    let query = `UPDATE posts SET tittel = '${oppdaterOverskrift}', innhold = '${oppdaterPostInnhold}' WHERE postid = '${updatePostId}'`;
+    
+    console.log(query);
+
+    let post = await db.update(query) 
+    if(post){
+    res.status(200).json(JSON.stringify(post)).end()
+        }else{
+            res.status(500).end()
+        }
+    
+});
 
 
 module.exports = router;

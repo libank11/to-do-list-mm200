@@ -1,15 +1,16 @@
+/*
 //Deadline function--------------------------------
-function fetchTime(elm) {
+function fetchTime(dato) {
  
 
-    localStorage.setItem("listid", elm);
+    //localStorage.setItem("listid", elm);
     
-    console.log(elm);
+    console.log(dato);
     //activeListid.valueOf();
         let data = JSON.stringify({
             token: authenticationToken,
             user: authenticatedUser,
-            listid: elm
+            dato: dato
         });
     
     
@@ -25,7 +26,7 @@ function fetchTime(elm) {
         }).then(response => {
             if (response.status < 400) {
                 console.log("loading")
-                setTimer(response);
+                checkTime(response);
     
             } else {
                 // TODO: MESSAGE
@@ -90,53 +91,30 @@ console.log(data)
 }
 
 
-function myFunction() {
- 
-
-    
-    
-    
-    //activeListid.valueOf();
-        let data = JSON.stringify({
-            token: authenticationToken,
-            user: authenticatedUser,
-            //listid: elm
-        });
-    
-    
-    
-    
-        fetch('/app/posts/load/', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-                "Authorization": authenticatedUser,
-            },
-            body: data
-        }).then(response => {
-            if (response.status < 400) {
-                console.log("loading")
-                checkTime(response);
-    
-            } else {
-                // TODO: MESSAGE
-                console.log('Did not load Database');
-            }
-        }).catch(err => console.error(err));
-    
-    
-    }
 
    async function checkTime(response){
-        let data = await response.json();
-        console.log(data)
-        for (let i = 0; i < data.length; i++) {
+    let data = await response.json();
 
-        
+    //console.log(data);
+
+    let view = document.createElement("div");
+    let listForDisplay = "";//view;
+
+
+    for (let i = 0; i < data.length; i++) {
+
         let postCd = data[i].postcontent;
         let postF = data[i].dato;
         let postlistId = data[i].postid;
 
+        console.log(postF);
+
+
+        
+
+      
+
     }
-   
-}
+    
+
+   }*/

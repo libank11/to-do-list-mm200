@@ -54,6 +54,8 @@ body {
  color: white;
 } 
 
+
+
 #accountContainer {
   position: relative;
   border-radius: 5px;
@@ -346,7 +348,7 @@ input[type=submit]:hover {
 }
 
 .dateInput input {
-  width: 42px;
+ 
   float: left;
   margin-right: 5px;
 

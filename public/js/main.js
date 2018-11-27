@@ -65,6 +65,7 @@ function headerFunction() {
 
         let x = document.getElementById("listHeader");
         let y = document.getElementById("listView");
+        
        let z = document.getElementById("accountContainer");
        let c = document.getElementById("taskContainer");
 
@@ -72,6 +73,7 @@ function headerFunction() {
       
         x.style.display = "none"
         y.style.display = "none"
+      
       z.style.display = "block"
       c.style.display = "none"
     }
@@ -88,10 +90,12 @@ function headerFunction() {
             
             let x = document.getElementById("listHeader");
             let y = document.getElementById("listView");
+           
             let z = document.getElementById("accountContainer");
           
             x.style.display = "block"
             y.style.display = "block"
+       
           z.style.display = "none"
    
            
@@ -179,6 +183,9 @@ function displayLists() {
 
         let inputTittel = document.getElementById("listTittel").value;
         let inputBeskrivelse = document.getElementById("listBeskrivelse").value;
+        let privacyValue = document.getElementById("privacy").value;
+
+        console.log(privacyValue);
 
 
         if (inputTittel.length && inputBeskrivelse.length == 0) {
@@ -193,7 +200,8 @@ function displayLists() {
                     inputTittel,
                     inputBeskrivelse,
                     user: authenticatedUser,
-                    token: authenticationToken
+                    token: authenticationToken,
+                    privacyValue
                     
 
                 }),
@@ -241,12 +249,12 @@ function modal() {
         let inputText = document.getElementById("task").value;
         //let inputTag = document.getElementById("tag").value;
         //  let inputDate = document.getElementById("task").value;
-        let inputMonth = document.getElementById("month").value;
-        let inputDay = document.getElementById("day").value;
-        let inputYear = document.getElementById("year").value;
-        let inputHour = document.getElementById("hour").value;
-        let inputMin = document.getElementById("min").value;
-        var inputDate = inputMonth + "-" + inputDay + "-" + inputYear + "-" + inputHour + "-" + inputMin;
+        let inputDate = document.getElementById("myDate").value;
+       
+       // var inputDate = inputMonth + "." + inputDay + "." + inputYear + "." + inputHour + "." + inputMin;
+
+       
+       
         // settimer();
         console.log(inputDate)
       
@@ -347,7 +355,7 @@ console.log(activeListid12);
 
 function fetchLists() {
 
-
+console.log("heihei");
 
     let data = JSON.stringify({
         token: authenticationToken,
@@ -369,7 +377,6 @@ function fetchLists() {
         if (response.status < 400) {
             console.log("loading")
             loadLists(response);
-
         } else {
             // TODO: MESSAGE
             console.log('Did not load Database');
@@ -380,14 +387,20 @@ function fetchLists() {
 }
 
 
+//let privBtn = document.getElementById("privacyBtn");
+//privBtn.onclick = fetchLists();
 async function loadLists(response) {
 
     let data = await response.json();
     console.log(data);
     var container = document.getElementById("listView");
     let listsForDisplay = "";
-
+    let value = document.getElementById("pivacySel").value;
+    console.log(value)
+if (value == "Privat"){
     for (var i = 0; i < data.length; i++) {
+        if (data[i].privacy == "Privat"){
+            console.log(data[i].privacyValue);
         let listT = data[i].listtittel;
         let listB = data[i].beskrivelse;
         let listid = data[i].listid;
@@ -397,23 +410,89 @@ async function loadLists(response) {
 
         let DBlists =
 
-            `<div id="listBox">
+            `
+            
+            <div id="listBox">
         
        <h1 onclick ="clearList(); modal(), fetchPosts(${listid}) "> ${listT}</h1>
        <p onclick ="clearList(); modal(), fetchPosts(${listid}) "> ${listB}</p>
         
        <button onclick="deleteLists(${listid})">Delete</button>
+       <button onclick="updateLists(${listid})">Edit</button>
+
         
         </div>
         `;
 
         listsForDisplay += DBlists;
-        
+        } else {console.log("did not make the cut");}
     }
+}
+    else if (value == "Public"){
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].privacy == "Public"){
+            let listT = data[i].listtittel;
+            let listB = data[i].beskrivelse;
+            let listid = data[i].listid;
+    
+            container.style.display = "block";
+    
+    
+            let DBlists =
+    
+                `
+                
+                <div id="listBox">
+            
+           <h1 onclick ="clearList(); modal(), fetchPosts(${listid}) "> ${listT}</h1>
+           <p onclick ="clearList(); modal(), fetchPosts(${listid}) "> ${listB}</p>
+            
+           <button onclick="deleteLists(${listid})">Delete</button>
+           <button onclick="updateLists(${listid})">Edit</button>
+    
+            
+            </div>
+            `;
+    
+            listsForDisplay += DBlists;
+            }
+        }
+    }
+        else if (value == "all"){
+            for (var i = 0; i < data.length; i++) {
+                
+                let listT = data[i].listtittel;
+                let listB = data[i].beskrivelse;
+                let listid = data[i].listid;
+        
+                container.style.display = "block";
+        
+        
+                let DBlists =
+        
+                    `
+                    
+                    <div id="listBox">
+                
+               <h1 onclick ="clearList(); modal(), fetchPosts(${listid}) "> ${listT}</h1>
+               <p onclick ="clearList(); modal(), fetchPosts(${listid}) "> ${listB}</p>
+                
+               <button onclick="deleteLists(${listid})">Delete</button>
+               <button onclick="updateLists(${listid})">Edit</button>
+        
+                
+                </div>
+                `;
+        
+                listsForDisplay += DBlists;
+                
+                }
+            }
+            document.getElementById("listView").innerHTML = listsForDisplay;
+            document.getElementById("listView").style.cursor = "pointer";
+        }
+  
 
-    document.getElementById("listView").innerHTML = listsForDisplay;
-    document.getElementById("listView").style.cursor = "pointer";
-} 
 
 function sjekk(){
     console.log("delete");
@@ -447,6 +526,7 @@ console.log(elm);
         if (response.status < 400) {
             console.log("loading")
             loadPosts(response);
+          
 
         } else {
             // TODO: MESSAGE
@@ -456,9 +536,6 @@ console.log(elm);
 
 
 }
-
-
-
 
 
 async function loadPosts(response) {
@@ -475,7 +552,7 @@ async function loadPosts(response) {
         let postCd = data[i].postcontent;
         let postF = data[i].dato;
         let postlistId = data[i].postid;
-
+        
         let div = document.createElement("div");
         div.class = "dropdown"
         div.id = "lists";
@@ -487,7 +564,7 @@ async function loadPosts(response) {
         
         <ul>
         
-        <li onclick="myFunction(${postF})">To Remember: ${postCd} Deadline: ${postF} <button id="deleteBtn" onclick="deleteListElement(${postlistId})")>delete</button>
+        <li>To Remember: ${postCd} Deadline: ${postF} <button id="deleteBtn" onclick="deleteListElement(${postlistId})")>delete</button>
         
         </li>
         </ul>
@@ -503,8 +580,13 @@ async function loadPosts(response) {
         // document.getElementById("container").innerHTML += div;
 
     }
+    
     document.getElementById("todocontainer").innerHTML = listForDisplay;
 
 }
-
+/*function setTimer(timevalue){
+var postF = new Date(timevalue); // Arrange values in Date Time Format
+console.log(postF)
+}
+*/
 
