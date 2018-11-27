@@ -79,10 +79,11 @@ function headerFunction() {
 
     myList.onclick = function (evt) {
             evt.preventDefault();
+            clearList();
            //clearContainer();
             displayLists();
             //clearAccContainer();
-            //clearList();
+            
 
             
             let x = document.getElementById("listHeader");
@@ -232,7 +233,7 @@ function modal() {
     let form = document.getElementById("modalBtn");
     form.onclick = function (evt) {
         modal.style.display = "none";
-console.log(activeListid);
+
         // Stops the form from submitting
         evt.preventDefault();
        let activeListid1 = localStorage.getItem("listid")
@@ -396,14 +397,15 @@ async function loadLists(response) {
 
         let DBlists =
 
-            `<div onclick ="clearList(); modal(), fetchPosts(${listid}) "id="listBox">
+            `<div id="listBox">
         
-       <h1> ${listT}</h1>
-       <p> ${listB}</p>
+       <h1 onclick ="clearList(); modal(), fetchPosts(${listid}) "> ${listT}</h1>
+       <p onclick ="clearList(); modal(), fetchPosts(${listid}) "> ${listB}</p>
         
+       <button onclick="deleteLists(${listid})">Delete</button>
         
-        
-        </div>`;
+        </div>
+        `;
 
         listsForDisplay += DBlists;
         
@@ -413,12 +415,13 @@ async function loadLists(response) {
     document.getElementById("listView").style.cursor = "pointer";
 } 
 
-
+function sjekk(){
+    console.log("delete");
+}
 
 
 function fetchPosts(elm) {
-  let listidArray = [elm]
-var activeListid = elm;
+ 
 
 localStorage.setItem("listid", elm);
 
@@ -461,7 +464,7 @@ console.log(elm);
 async function loadPosts(response) {
     let data = await response.json();
 
-    console.log(data);
+    //console.log(data);
 
     let view = document.createElement("div");
     let listForDisplay = "";//view;
@@ -484,30 +487,24 @@ async function loadPosts(response) {
         
         <ul>
         
-        <li  class="tooltip"  onmouseover=  >To Remember: ${postCd} Deadline: ${postF} <button id="deleteBtn" onclick="deleteListElement(${postlistId})")>delete</button>
-        <span class="tooltiptext" ></span>
+        <li onclick="myFunction(${postF})">To Remember: ${postCd} Deadline: ${postF} <button id="deleteBtn" onclick="deleteListElement(${postlistId})")>delete</button>
+        
         </li>
         </ul>
         
         </div>
-        <div class="dropdown">
-        <button class="dropbtn">Info</button>
-        <div class="dropdown-content">
-        <p id="timer_value"></p>
-        </div>
-      </div>`;
+        `;
 
         div.innerHTML = DBlist;
         div.id = i;
-        // view.appendChild(div);
+        
 
         listForDisplay += DBlist;
         // document.getElementById("container").innerHTML += div;
 
     }
-
-    //document.getElementById("container").innerHTML = div;
-    //let display = document.getElementById("container");
     document.getElementById("todocontainer").innerHTML = listForDisplay;
 
 }
+
+

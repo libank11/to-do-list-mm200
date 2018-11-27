@@ -1,10 +1,45 @@
 //Deadline function--------------------------------
+function fetchTime(elm) {
+ 
 
+    localStorage.setItem("listid", elm);
+    
+    console.log(elm);
+    //activeListid.valueOf();
+        let data = JSON.stringify({
+            token: authenticationToken,
+            user: authenticatedUser,
+            listid: elm
+        });
+    
+    
+    
+    
+        fetch('/app/posts/load/', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                "Authorization": authenticatedUser,
+            },
+            body: data
+        }).then(response => {
+            if (response.status < 400) {
+                console.log("loading")
+                setTimer(response);
+    
+            } else {
+                // TODO: MESSAGE
+                console.log('Did not load Database');
+            }
+        }).catch(err => console.error(err));
+    
+    
+    }
 //var timer;
-/*async function settimer(respons) {
+async function setTimer(response) {
 
     //clearInterval(timer);
-    let data = await respons.json();
+    let data = await response.json();
 
 console.log(data)
 
@@ -45,11 +80,63 @@ console.log(data)
         var minutes = Math.floor((remain % hour) / minute);
         var seconds = Math.floor((remain % minute) / second);
 
-        document.getElementById(elmID).innerHTML = days + 'Days ';
+        document.getElementById("timer_value").innerHTML = days + 'Days ';
 
         if (days < 1) {
             document.getElementById("elmID").innerHTML = '1 day left';
         }
     }
    // timer = setInterval(showtimer, 1000); // Display Timer In Every 1 Sec
-}*/
+}
+
+
+function myFunction() {
+ 
+
+    
+    
+    
+    //activeListid.valueOf();
+        let data = JSON.stringify({
+            token: authenticationToken,
+            user: authenticatedUser,
+            //listid: elm
+        });
+    
+    
+    
+    
+        fetch('/app/posts/load/', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                "Authorization": authenticatedUser,
+            },
+            body: data
+        }).then(response => {
+            if (response.status < 400) {
+                console.log("loading")
+                checkTime(response);
+    
+            } else {
+                // TODO: MESSAGE
+                console.log('Did not load Database');
+            }
+        }).catch(err => console.error(err));
+    
+    
+    }
+
+   async function checkTime(response){
+        let data = await response.json();
+        console.log(data)
+        for (let i = 0; i < data.length; i++) {
+
+        
+        let postCd = data[i].postcontent;
+        let postF = data[i].dato;
+        let postlistId = data[i].postid;
+
+    }
+   
+}

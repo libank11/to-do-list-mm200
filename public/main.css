@@ -51,6 +51,7 @@ body {
   padding: 20px 0 30px 0;
   text-align: center;
  overflow: hidden;
+ color: white;
 } 
 
 #accountContainer {
@@ -69,13 +70,18 @@ body {
     box-sizing: border-box;
     margin: auto;
     margin-top: 5px;
+    color: white;
 
 }
 
 /* style inputs and link buttons */
 input,
 .btn {
-  
+  font-size: 18px;
+}
+
+#listBtn{
+  font-size: 18px;
 }
 
 input:hover,
@@ -227,7 +233,7 @@ input[type=submit]:hover {
 }
 
 .modal input{
-  
+  font-size: 15px;
 }
 
 
@@ -360,7 +366,7 @@ input[type=submit]:hover {
 }
 
 #todocontainer{
-color: wheat; 
+color: white; 
 float: right;
 
 }
@@ -554,10 +560,15 @@ ul{
 
 
 #listBox {
-font-size: 11px;
-padding: 10px 10px 10px 10px;
-border-style: ridge;
-float: left;
-max-width: 224px;
+
+  background-image: linear-gradient(rgb(238, 169, 73, 0.5), rgb(244, 107, 69, 0.5));
+  font-size: 11px;
+  padding: 10px 10px 10px 10px;
+  border-style: ridge;
+  float: left;
+  max-width: 205px;
+  min-width: 205px;
+  margin-left: 10px;
+  color: white;
 
 }
