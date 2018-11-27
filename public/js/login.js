@@ -1,7 +1,7 @@
 // Ask the server to verify that there is a user with the given username and password registerd.
 
 function authenticateUser(username, password) {
-    console.log("Starting authentication request", `Username ${username}`, `Password ${password}`);
+   
 
     // We are going to base our authentication on basic authentication. This is a authentication scheme suported by http (RFC 7617)
 
@@ -35,8 +35,7 @@ function authenticateUser(username, password) {
         authenticationToken = responsJSON.auth; // Because this is where the server puts the token.
         authenticatedUser = responsJSON.user; // Information about the user. 
 
-        console.log(authenticationToken);
-        console.log(authenticatedUser);
+       
 
 
         //modal();

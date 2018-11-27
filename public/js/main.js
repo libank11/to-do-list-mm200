@@ -13,8 +13,7 @@ var activeListid;
     
 })()
 
-// View code ----------------------------------------------------------------------------------
-// Moste things after this point is just UI code and not important for the discussion.
+
 
 function displayLogin() {
     clearContainer();
@@ -58,7 +57,7 @@ function headerFunction() {
     acc.onclick = function (evt) {
         evt.preventDefault();
         clearList();
-        //clearContainer();
+      
         displayAccount();
         
         
@@ -82,9 +81,9 @@ function headerFunction() {
     myList.onclick = function (evt) {
             evt.preventDefault();
             clearList();
-           //clearContainer();
+       
             displayLists();
-            //clearAccContainer();
+         
             
 
             
@@ -125,11 +124,9 @@ function fetchUser() {
         if (respons.status < 400) {
             console.log("loading")
             loadLists(respons);
-            // displayAccount(response);
-
-            // settimer(response);
+            
         } else {
-            // TODO: MESSAGE
+           
             console.log('Did not load Database');
         }
     }).catch(err => console.error(err));
@@ -145,7 +142,7 @@ function displayAccount(respons) {
 
     let accountForm = getTemplate("accountTemplate");
     document.getElementById("accountContainer").appendChild(accountForm);
-    console.log("account")
+  
 
 
     let accountView = document.getElementById("accountContainer");
@@ -174,7 +171,7 @@ function displayLists() {
 
     let form = document.getElementById("listBtn");
     form.onclick = function (evt) {
-        console.log("list")
+      
 
         // Stops the form from submitting
         evt.preventDefault();
@@ -185,7 +182,7 @@ function displayLists() {
         let inputBeskrivelse = document.getElementById("listBeskrivelse").value;
         let privacyValue = document.getElementById("privacy").value;
 
-        console.log(privacyValue);
+   
 
 
         if (inputTittel.length && inputBeskrivelse.length == 0) {
@@ -211,9 +208,9 @@ function displayLists() {
 
             }).then(function (data) {
                 if (data.status < 400) {
-                    //document.getElementById("task").value = "";
-                    console.log(data);
-                    //fetchData();
+                   
+                  
+                 
                     fetchLists();
                     return data.json();
 
@@ -231,9 +228,7 @@ function displayLists() {
 function modal() {
 
 
-    //clearContainer();
-
-    // localStorage.setItem('Token', JSON.stringify(authenticationToken))
+    
     let createTaskForm = getTemplate("modal");
     document.getElementById("taskContainer").appendChild(createTaskForm);
     document.getElementById("taskContainer").style.display = "block";
@@ -245,21 +240,22 @@ function modal() {
         // Stops the form from submitting
         evt.preventDefault();
        let activeListid1 = localStorage.getItem("listid")
+
+
+
         //Putting the content and a user id in the database-----------------------------
         let inputText = document.getElementById("task").value;
-        //let inputTag = document.getElementById("tag").value;
-        //  let inputDate = document.getElementById("task").value;
+        
         let inputDate = document.getElementById("myDate").value;
        
-       // var inputDate = inputMonth + "." + inputDay + "." + inputYear + "." + inputHour + "." + inputMin;
+   
 
        
        
-        // settimer();
-        console.log(inputDate)
+      
       
        let activeListid12 = { id: activeListid1 }; 
-console.log(activeListid12);
+
 
         if (inputText.length == 0) {
             inputText.value = "";
@@ -285,7 +281,7 @@ console.log(activeListid12);
             }).then(function (data) {
                 if (data.status < 400) {
                     document.getElementById("task").value = "";
-                    console.log(data);
+                  
                     fetchPosts(activeListid1);
                    
                     return data.json();
@@ -355,12 +351,12 @@ console.log(activeListid12);
 
 function fetchLists() {
 
-console.log("heihei");
+
 
     let data = JSON.stringify({
         token: authenticationToken,
         user: authenticatedUser,
-        //listid:listid
+       
     });
 
 
@@ -387,20 +383,19 @@ console.log("heihei");
 }
 
 
-//let privBtn = document.getElementById("privacyBtn");
-//privBtn.onclick = fetchLists();
+
 async function loadLists(response) {
 
     let data = await response.json();
-    console.log(data);
+   
     var container = document.getElementById("listView");
     let listsForDisplay = "";
     let value = document.getElementById("pivacySel").value;
-    console.log(value)
+   
 if (value == "Privat"){
     for (var i = 0; i < data.length; i++) {
         if (data[i].privacy == "Privat"){
-            console.log(data[i].privacyValue);
+            
         let listT = data[i].listtittel;
         let listB = data[i].beskrivelse;
         let listid = data[i].listid;
@@ -494,9 +489,7 @@ if (value == "Privat"){
   
 
 
-function sjekk(){
-    console.log("delete");
-}
+
 
 
 function fetchPosts(elm) {
@@ -504,7 +497,7 @@ function fetchPosts(elm) {
 
 localStorage.setItem("listid", elm);
 
-console.log(elm);
+
 //activeListid.valueOf();
     let data = JSON.stringify({
         token: authenticationToken,
@@ -541,7 +534,7 @@ console.log(elm);
 async function loadPosts(response) {
     let data = await response.json();
 
-    //console.log(data);
+   
 
     let view = document.createElement("div");
     let listForDisplay = "";//view;
@@ -584,9 +577,5 @@ async function loadPosts(response) {
     document.getElementById("todocontainer").innerHTML = listForDisplay;
 
 }
-/*function setTimer(timevalue){
-var postF = new Date(timevalue); // Arrange values in Date Time Format
-console.log(postF)
-}
-*/
+
 

@@ -52,7 +52,7 @@ router.get('/app/user/:userName', async function(req,res,next){
 
     if(user){
         res.status(200).json(user).end()
-        console.log(query)
+        
         
     } else{
         res.status(401).json({}).end();
